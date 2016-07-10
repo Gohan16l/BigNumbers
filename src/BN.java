@@ -6,6 +6,7 @@ public class BN {
 //stato interno
 	private String original;
 	private char s;
+	private String i,d;
 	private byte[] I,D;
 	static final char comma=',' , period='.';
 
@@ -37,13 +38,37 @@ public class BN {
 	{
 		this.original = original;
 	}
-	public byte[] getN ()
+	public String geti ()
+	{
+		return i;
+	}
+	public void seti (String i)
+	{
+		this.i = i;
+	}
+	public String getd ()
+	{
+		return d;
+	}
+	public void setd (String d)
+	{
+		this.d = d;
+	}
+	public byte[] getI ()
 	{
 		return I;
 	}
-	public void setN (byte[] n)
+	public void setI (byte[] n)
 	{
 		I = n;
+	}
+	public byte[] getD ()
+	{
+		return D;
+	}
+	public void setD (byte[] d)
+	{
+		D = d;
 	}
 	public char getS ()
 	{
@@ -67,7 +92,6 @@ public class BN {
 	//convert a single char to a byte
 	private byte charToByte(String s1)
 	{
-		//if
 		byte n;
 		n=Byte.parseByte(s1);
 		return n;
