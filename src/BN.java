@@ -1,5 +1,5 @@
 /**
- * Created by andrea on 27/06/16.
+ * Created by Andrea (Black) Costa on 27/06/16.
  * It belong to BigNumber
  */
 public class BN {
@@ -9,6 +9,7 @@ public class BN {
 	private String i,d;
 	private byte[] I,D;
 	static final char comma=',' , period='.';
+	static final char p='+', m='-';
 
 
 //costruttori
@@ -23,10 +24,69 @@ public class BN {
 
 	BN(String input)
 	{
-		original=input;
+		setOriginal(input);
 
+		int n=0;
+		if(original.charAt(0)==p || original.charAt(0)==m)
+		{
+			setS(original.charAt(0));
+			n=1;
+		}
+		else
+			setS(p);
+
+		String s1="";
+		boolean i1=true;
+
+		try
+		{
+			for (; n < original.length(); n++)
+			{
+				char c = original.charAt(n);
+				switch (c)
+				{
+					case '0':
+						s1 = "0";
+					case '1':
+						s1 = "1";
+					case '2':
+						s1 = "2";
+					case '3':
+						s1 = "3";
+					case '4':
+						s1 = "4";
+					case '5':
+						s1 = "5";
+					case '6':
+						s1 = "6";
+					case '7':
+						s1 = "7";
+					case '8':
+						s1 = "8";
+					case '9':
+						s1 = "9";
+					case comma:
+						i1 = false;
+					case period:
+						i1 = false;
+					default:
+						throw new BNCharacterException();
+				}
+				if (i1)
+				{
+					i+=s1;
+				}
+				else
+				{
+					d+=s1;
+				}
+			}
+		}
+		catch (BNCharacterException e)
+		{
+			System.out.println(e.getError());
+		}
 	}
-
 
 
 //manipolatori
@@ -34,7 +94,7 @@ public class BN {
 	{
 		return original;
 	}
-	public void setOriginal (String original)
+	private void setOriginal (String original)
 	{
 		this.original = original;
 	}
@@ -86,6 +146,16 @@ public class BN {
 	{
 		return period;
 	}
+	public static char getP ()
+	{
+		return p;
+	}
+	public static char getM ()
+	{
+		return m;
+	}
+
+
 
 //metodi
 
