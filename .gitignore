@@ -4,3 +4,9 @@
 BigNumber.iml
 
 out/META-INF/MANIFEST.MF
+
+out/production/BigNumber/BN.class
+
+out/production/BigNumber/BNCharacterException.class
+
+out/production/BigNumber/BNIntegerException.class
