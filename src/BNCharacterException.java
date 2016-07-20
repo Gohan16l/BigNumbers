@@ -2,7 +2,7 @@
  * Created by Andrea (Black) Costa on 20/07/16.
  * It belong to BigNumber
  */
-public class BNCharacterException extends Exception {
+class BNCharacterException extends Exception {
 //stato interno
 	private final String error ="The Character is not valid!";
 
@@ -11,8 +11,7 @@ public class BNCharacterException extends Exception {
 
 
 //manipolatori
-
-	public String getError () {
+	String getError () {
 		return error;
 	}
 

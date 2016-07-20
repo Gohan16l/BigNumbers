@@ -2,3 +2,5 @@
 *.xml
 
 BigNumber.iml
+
+out/META-INF/MANIFEST.MF

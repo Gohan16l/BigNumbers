@@ -29,6 +29,16 @@ public class BN {
 		//set original string
 		setOriginal(input);
 		
+		//check the first character
+		try
+		{
+			generateIntegerException();
+		}
+		catch (BNIntegerException e)
+		{
+			System.out.println(e.getError());
+		}
+
 		//set s
 		int n=0;
 		if(original.charAt(0)==p || original.charAt(0)==m)
@@ -59,6 +69,7 @@ public class BN {
 						{
 							d=d.concat("0");
 						};
+						break;
 					case '1':
 						if (b1)
 						{
@@ -68,6 +79,7 @@ public class BN {
 						{
 							d=d.concat("1");
 						};
+						break;
 					case '2':
 						if (b1)
 						{
@@ -77,6 +89,7 @@ public class BN {
 						{
 							d=d.concat("2");
 						};
+						break;
 					case '3':
 						if (b1)
 						{
@@ -86,6 +99,7 @@ public class BN {
 						{
 							d=d.concat("3");
 						};
+						break;
 					case '4':
 						if (b1)
 						{
@@ -95,6 +109,7 @@ public class BN {
 						{
 							d=d.concat("4");
 						};
+						break;
 					case '5':
 						if (b1)
 						{
@@ -104,6 +119,7 @@ public class BN {
 						{
 							d=d.concat("5");
 						};
+						break;
 					case '6':
 						if (b1)
 						{
@@ -113,6 +129,7 @@ public class BN {
 						{
 							d=d.concat("6");
 						};
+						break;
 					case '7':
 						if (b1)
 						{
@@ -122,6 +139,7 @@ public class BN {
 						{
 							d=d.concat("7");
 						};
+						break;
 					case '8':
 						if (b1)
 						{
@@ -131,6 +149,7 @@ public class BN {
 						{
 							d=d.concat("8");
 						};
+						break;
 					case '9':
 						if (b1)
 						{
@@ -140,10 +159,13 @@ public class BN {
 						{
 							d=d.concat("9");
 						};
+						break;
 					case comma:
 						b1 = false;
+						break;
 					case period:
 						b1 = false;
+						break;
 					default:
 						throw new BNCharacterException();
 				}
@@ -233,6 +255,35 @@ public class BN {
 
 //metodi
 
+	private void generateIntegerException() throws BNIntegerException
+	{
+		switch (original.charAt(0))
+		{
+			case '0':
+				break;
+			case '1':
+				break;
+			case '2':
+				break;
+			case '3':
+				break;
+			case '4':
+				break;
+			case '5':
+				break;
+			case '6':
+				break;
+			case '7':
+				break;
+			case '8':
+				break;
+			case '9':
+				break;
+			default:
+				throw new BNIntegerException();
+		}
+	}
+
 	//convert a single char to a byte
 	private byte charToByte(String s1)
 	{
@@ -245,11 +296,96 @@ public class BN {
 	private byte[] stringToByte(String s1)
 	{
 		byte[] b = new byte[s1.length()];
-		for (int i = 0; i < s1.length(); i++)
+		for (int i = s1.length()-1, n = 0; i >= 0; i--, n++)
 		{
-			b[i] = charToByte(s1.substring(i, i + 1));
+			b[n] = charToByte(s1.substring(i - 1, i));
 		}
 		return b;
+	}
+
+	//return a String object from a byte array
+	private String byteToString (byte [] array)
+	{
+		String s1 = "";
+		for (int i = array.length-1;i > 0; i--)
+		{
+			s1=s1.concat(Byte.toString(array[i]));
+		}
+		return s1;
+	}
+
+	//return BN length
+	public int length ()
+	{
+		return original.length();
+	}
+	
+	//return a digit of BN byte arrays
+	public byte IByteAt(int index)
+	{
+		return I[index];
+	}
+	public byte DByteAt(int index)
+	{
+		return D[index];
+	}
+
+	//sum of two byte
+	private byte add(byte b1, byte b2)
+	{
+		return (byte) (b1+b2);
+	}
+
+	//return a byte array contains only a digit per index from an array overcrowded
+	//work in progress
+	/*private byte[] modulo (byte[] b)
+	{
+		return;
+	}*/
+
+	//this is a method to sum two BN object
+	public BN sum (BN addend)
+	{
+		String s1="";
+		byte[] b;
+		if (addend.length()!=this.length())
+		{
+			if (addend.length() < this.length())
+			{
+				b=new byte[this.length()];
+				for (int i=0;i<addend.length();i++)
+				{
+					b[i]=add(addend.IByteAt(i), this.IByteAt(i));
+				}
+				for (int i=addend.length(); i<this.length(); i++)
+				{
+					b[i]=this.IByteAt(i);
+				}
+			}
+			else
+			{
+				b=new byte[addend.length()];
+				for (int i=0;i<this.length();i++)
+				{
+					b[i]=add(addend.IByteAt(i), this.IByteAt(i));
+				}
+				for (int i=this.length(); i<addend.length(); i++)
+				{
+					b[i]=addend.IByteAt(i);
+				}
+			}
+		}
+		else
+		{
+			b=new byte[this.length()];
+			for (int i=0;i<this.length();i++)
+			{
+				b[i]=add(addend.IByteAt(i), this.IByteAt(i));
+			}
+
+		}
+
+		return new BN(byteToString(b));
 	}
 
 }
