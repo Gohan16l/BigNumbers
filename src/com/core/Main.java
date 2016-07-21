@@ -30,5 +30,6 @@ public class Main {
 		stampa("risultato:");
 		System.out.print(a.getS());
 		System.out.println(c.getOriginal());
+		stampa(String.valueOf(c.length()));
     }
 }
