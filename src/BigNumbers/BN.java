@@ -1,7 +1,10 @@
+package BigNumbers;
+
 /**
  * Created by Andrea (Black) Costa on 27/06/16.
  * It belong to BigNumber
  */
+
 public class BN {
 //stato interno
 	private String original;
@@ -55,9 +58,11 @@ public class BN {
 		//set of i and d
 		try
 		{
+			i="";
+			d="";
 			while (n<original.length())
 			{
-				char c = original.charAt(++n);
+				char c = original.charAt(n++);
 				switch (c)
 				{
 					case '0':
@@ -180,8 +185,7 @@ public class BN {
 
 		//set I and D if d is not null
 		setI(stringToByte(geti()));
-		if(!d.equals(null))
-			setD(stringToByte(getd()));
+		setD(stringToByte(getd()));
 	}
 
 
@@ -296,9 +300,16 @@ public class BN {
 	private byte[] stringToByte(String s1)
 	{
 		byte[] b = new byte[s1.length()];
-		for (int i = s1.length()-1, n = 0; i >= 0; i--, n++)
+		if (s1.length()==1)
 		{
-			b[n] = charToByte(s1.substring(i - 1, i));
+			b[0] = charToByte(s1.substring(0));
+		}
+		else
+		{
+			for (int i = s1.length() - 1, n = 0; i >= 0; i--, n++)
+			{
+				b[n] = charToByte(s1.substring(i, i + 1));
+			}
 		}
 		return b;
 	}
@@ -307,7 +318,7 @@ public class BN {
 	private String byteToString (byte [] array)
 	{
 		String s1 = "";
-		for (int i = array.length-1;i > 0; i--)
+		for (int i = array.length-1;i >= 0; i--)
 		{
 			s1=s1.concat(Byte.toString(array[i]));
 		}
@@ -337,11 +348,30 @@ public class BN {
 	}
 
 	//return a byte array contains only a digit per index from an array overcrowded
-	//work in progress
-	/*private byte[] modulo (byte[] b)
+	private byte[] modulo (byte[] b)
 	{
-		return;
-	}*/
+		byte[] r;
+		if(b[b.length-1]>=10)
+			r = new byte[b.length+1];
+		else
+			r = new byte[b.length];
+		int index=0;
+		for (byte i:b)
+		{
+			if(i>=10)
+			{
+				byte rest = (byte) (i%10);
+				byte unit = 1;
+				r[index] = add(r[index],rest);
+				r[index + 1] = add(r[index + 1], unit);
+			}
+			else
+				r[index] = add(r[index],i);
+
+			index++;
+		}
+		return r;
+	}
 
 	//this is a method to sum two BN object
 	public BN sum (BN addend)
@@ -385,7 +415,7 @@ public class BN {
 
 		}
 
-		return new BN(byteToString(b));
+		return new BN(byteToString(modulo(b)));
 	}
 
 }

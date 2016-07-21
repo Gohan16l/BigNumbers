@@ -5,8 +5,14 @@ BigNumber.iml
 
 out/META-INF/MANIFEST.MF
 
-out/production/BigNumber/BN.class
+out/production/BigNumber/BigNumbers.BN.class
 
-out/production/BigNumber/BNCharacterException.class
+out/production/BigNumber/BigNumbers.BNCharacterException.class
 
-out/production/BigNumber/BNIntegerException.class
+out/production/BigNumber/BigNumbers.BNIntegerException.class
+
+out/artifacts/BIgNumberLibrary/number/BN.java
+
+out/artifacts/BIgNumberLibrary/number/BNCharacterException.java
+
+out/artifacts/BIgNumberLibrary/number/BNIntegerException.java
