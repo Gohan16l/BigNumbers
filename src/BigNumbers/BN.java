@@ -40,6 +40,7 @@ public class BN {
 		catch (BNIntegerException e)
 		{
 			System.out.println(e.getError());
+			System.exit(1001);
 		}
 
 		//set s
@@ -181,6 +182,7 @@ public class BN {
 		catch (BNCharacterException e)
 		{
 			System.out.println(e.getError());
+			System.exit(1002);
 		}
 
 		//set I and D if d is not null
@@ -350,25 +352,41 @@ public class BN {
 	//return a byte array contains only a digit per index from an array overcrowded
 	private byte[] modulo (byte[] b)
 	{
-		byte[] r;
-		if(b[b.length-1]>=10)
-			r = new byte[b.length+1];
-		else
-			r = new byte[b.length];
-		int index=0;
-		for (byte i:b)
+		byte temporary;
+		byte rest;
+		byte unit = 1;
+		for (int i = 0;i < b.length - 1;i++)
 		{
-			if(i>=10)
+			temporary = b[i];
+			if(temporary >= 10)
 			{
-				byte rest = (byte) (i%10);
-				byte unit = 1;
-				r[index] = add(r[index],rest);
-				r[index + 1] = add(r[index + 1], unit);
+				rest = (byte) (temporary%10);
+				b[i] = rest;
+				b[i + 1] = add(b[i + 1], unit);
 			}
-			else
-				r[index] = add(r[index],i);
+		}
 
-			index++;
+		byte[] r;
+		int i=0;
+		if(b[b.length - 1] >= 10)
+		{
+			r = new byte[b.length + 1];
+			rest = (byte) (b[b.length - 1]%10);
+			b[b.length-1]=rest;
+
+			for (byte b1:b)
+			{
+				r[i++]=b1;
+			}
+			r[b.length]= unit;
+		}
+		else
+		{
+			r = new byte[b.length];
+			for (byte b1:b)
+			{
+				r[i++]=b1;
+			}
 		}
 		return r;
 	}
