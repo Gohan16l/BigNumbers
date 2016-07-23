@@ -11,8 +11,6 @@ out/production/BigNumber/BigNumbers.BNCharacterException.class
 
 out/production/BigNumber/BigNumbers.BNIntegerException.class
 
-out/artifacts/BIgNumberLibrary/number/BN.java
+out/artifacts/BIgNumberLibrary
 
-out/artifacts/BIgNumberLibrary/number/BNCharacterException.java
-
-out/artifacts/BIgNumberLibrary/number/BNIntegerException.java
+*.DS_store
