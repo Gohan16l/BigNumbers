@@ -439,7 +439,8 @@ public class BN {
 			{
 				if (addend.getd().isEmpty() && this.getd().isEmpty()) //case without d string
 				{
-					b1 = new byte[0];
+					b1 = new byte[1];
+					//b1[0]=0;
 					if (addend.length() < this.length())
 					{
 						b = new byte[this.length()];

@@ -27,9 +27,9 @@ public class Main {
 
 		BN c = a.sum(b);
 
-		stampa("risultato:");
+		System.out.print("risultato:");
 		System.out.print(a.getS());
 		System.out.println(c.getOriginal());
-		stampa(String.valueOf(c.length()));
+		stampa(String.valueOf("cifre usate:"+c.length()));
     }
 }
