@@ -435,7 +435,7 @@ public class BN {
 //		if (addend.length()!=this.length())
 //		{
 
-			if(addend.getS()==this.getS())
+			if(addend.getS()==this.getS())//case with same S
 			{
 				if (addend.getd().isEmpty() && this.getd().isEmpty()) //case without d string
 				{
@@ -635,9 +635,8 @@ public class BN {
 					return new BN(byteToString(modulo(b)));
 				}
 			}
-			else
+			else//case with different S
 			{
-
 
 
 				return this;//provvisorio
