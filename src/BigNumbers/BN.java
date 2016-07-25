@@ -185,7 +185,7 @@ public class BN {
 			System.exit(1002);
 		}
 
-		//set I and D if d is not null
+		//set I and D
 		setI(stringToByte(geti()));
 		setD(invert(stringToByte(getd())));
 	}
@@ -290,8 +290,15 @@ public class BN {
 		}
 	}
 
+	private static String charToString(char c)
+	{
+		String s="";
+		s=String.valueOf(c);
+		return s;
+	}
+
 	//convert a single char to a byte
-	private byte charToByte(String s1)
+	private static byte charToByte(String s1)
 	{
 		byte n;
 		n=Byte.parseByte(s1);
@@ -299,7 +306,7 @@ public class BN {
 	}
 
 	//convert a string in a byte array
-	private byte[] stringToByte(String s1)
+	private static byte[] stringToByte(String s1)
 	{
 		byte[] b = new byte[s1.length()];
 		if (s1.length()==1)
@@ -317,7 +324,7 @@ public class BN {
 	}
 
 	//invert the order of an array
-	private byte[] invert(byte[] input)
+	private static byte[] invert(byte[] input)
 	{
 		byte[] array = new byte[input.length];
 		int n=input.length-1;
@@ -329,7 +336,7 @@ public class BN {
 	}
 
 	//return a String object from a byte array
-	private String byteToString (byte [] array)
+	private static String byteToString (byte [] array)
 	{
 		String s1 = "";
 		for (int i = array.length-1;i >= 0; i--)
@@ -368,13 +375,13 @@ public class BN {
 	}
 
 	//sum of two byte
-	private byte add(byte b1, byte b2)
+	private static byte add(byte b1, byte b2)
 	{
 		return (byte) (b1+b2);
 	}
 
 	//return a byte array contains only a digit per index from an array overcrowded
-	private byte[] modulo (byte[] b)
+	private static byte[] modulo (byte[] b)
 	{
 		byte temporary;
 		byte rest;
@@ -424,102 +431,104 @@ public class BN {
 //		if (addend.length()!=this.length())
 //		{
 
-			if (addend.getd().isEmpty()) //case without d string
+			if(addend.getS()==this.getS())
 			{
-				b1= new byte[0];
-				if (addend.length() < this.length())
+				if (addend.getd().isEmpty()) //case without d string
 				{
-					b = new byte[this.length()];
-					for (int i = 0; i < addend.length(); i++)
+					b1 = new byte[0];
+					if (addend.length() < this.length())
 					{
-						b[i] = add(addend.IByteAt(i), this.IByteAt(i));
+						b = new byte[this.length()];
+						for (int i = 0; i < addend.length(); i++)
+						{
+							b[i] = add(addend.IByteAt(i), this.IByteAt(i));
+						}
+						for (int i = addend.length(); i < this.length(); i++)
+						{
+							b[i] = this.IByteAt(i);
+						}
 					}
-					for (int i = addend.length(); i < this.length(); i++)
+					else
 					{
-						b[i] = this.IByteAt(i);
+						b = new byte[addend.length()];
+						for (int i = 0; i < this.length(); i++)
+						{
+							b[i] = add(addend.IByteAt(i), this.IByteAt(i));
+						}
+						for (int i = this.length(); i < addend.length(); i++)
+						{
+							b[i] = addend.IByteAt(i);
+						}
 					}
 				}
-				else
+				else //case with d string
 				{
-					b = new byte[addend.length()];
-					for (int i = 0; i < this.length(); i++)
+					if (addend.ILength() > this.ILength()) //integer
 					{
-						b[i] = add(addend.IByteAt(i), this.IByteAt(i));
+						b = new byte[addend.ILength()];
+						for (int i = 0; i < this.ILength(); i++)
+						{
+							b[i] = add(addend.IByteAt(i), this.IByteAt(i));
+						}
+						for (int i = this.ILength(); i < addend.ILength(); i++)
+						{
+							b[i] = addend.IByteAt(i);
+						}
 					}
-					for (int i = this.length(); i < addend.length(); i++)
+					else if (addend.ILength() < this.ILength())
 					{
-						b[i] = addend.IByteAt(i);
+						b = new byte[this.ILength()];
+						for (int i = 0; i < addend.ILength(); i++)
+						{
+							b[i] = add(addend.IByteAt(i), this.IByteAt(i));
+						}
+						for (int i = addend.ILength(); i < this.ILength(); i++)
+						{
+							b[i] = this.IByteAt(i);
+						}
+					}
+					else
+					{
+						b = new byte[this.ILength()];
+						for (int i = 0; i < this.ILength(); i++)
+						{
+							b[i] = add(addend.IByteAt(i), this.IByteAt(i));
+						}
+					}
+					if (addend.DLength() > this.DLength()) //decimal
+					{
+						b1 = new byte[addend.DLength()];
+						for (int i = 0; i < this.DLength(); i++)
+						{
+							b1[i] = add(addend.DByteAt(i), this.DByteAt(i));
+						}
+						for (int i = this.DLength(); i < addend.DLength(); i++)
+						{
+							b1[i] = addend.DByteAt(i);
+						}
+					}
+					else if (addend.DLength() < this.DLength())
+					{
+						b1 = new byte[this.DLength()];
+						for (int i = 0; i < addend.DLength(); i++)
+						{
+							b1[i] = add(addend.DByteAt(i), this.DByteAt(i));
+						}
+						for (int i = addend.DLength(); i < this.DLength(); i++)
+						{
+							b1[i] = this.DByteAt(i);
+						}
+					}
+					else
+					{
+						b1 = new byte[this.DLength()];
+						for (int i = 0; i < this.DLength(); i++)
+						{
+							b1[i] = add(addend.DByteAt(i), this.DByteAt(i));
+						}
 					}
 				}
-			}
-			else //case with d string
-			{
-				if(addend.ILength()>this.ILength()) //integer
-				{
-					b = new byte[addend.ILength()];
-					for (int i = 0; i < this.ILength(); i++)
-					{
-						b[i] = add(addend.IByteAt(i), this.IByteAt(i));
-					}
-					for (int i = this.ILength(); i < addend.ILength(); i++)
-					{
-						b[i] = addend.IByteAt(i);
-					}
-				}
-				else if(addend.ILength()<this.ILength())
-				{
-					b = new byte[this.ILength()];
-					for (int i = 0; i < addend.ILength(); i++)
-					{
-						b[i] = add(addend.IByteAt(i), this.IByteAt(i));
-					}
-					for (int i = addend.ILength(); i < this.ILength(); i++)
-					{
-						b[i] = this.IByteAt(i);
-					}
-				}
-				else
-				{
-					b = new byte[this.ILength()];
-					for (int i = 0; i < this.ILength(); i++)
-					{
-						b[i] = add(addend.IByteAt(i), this.IByteAt(i));
-					}
-				}
-				if(addend.DLength()>this.DLength()) //decimal
-				{
-					b1 = new byte[addend.DLength()];
-					for (int i = 0; i < this.DLength(); i++)
-					{
-						b1[i] = add(addend.DByteAt(i), this.DByteAt(i));
-					}
-					for (int i = this.DLength(); i < addend.DLength(); i++)
-					{
-						b1[i] = addend.DByteAt(i);
-					}
-				}
-				else if (addend.DLength()<this.DLength())
-				{
-					b1 = new byte[this.DLength()];
-					for (int i = 0; i < addend.DLength(); i++)
-					{
-						b1[i] = add(addend.DByteAt(i), this.DByteAt(i));
-					}
-					for (int i = addend.DLength(); i < this.DLength(); i++)
-					{
-						b1[i] = this.DByteAt(i);
-					}
-				}
-				else
-				{
-					b1 = new byte[this.DLength()];
-					for (int i = 0; i < this.DLength(); i++)
-					{
-						b1[i] = add(addend.DByteAt(i), this.DByteAt(i));
-					}
-				}
-			}
-		//}
+				//}
 //		else //this is a repetition, to optimize!
 //		{
 //			if (addend.getd().isEmpty())
@@ -600,7 +609,28 @@ public class BN {
 //			}
 //		}
 
-		return new BN(byteToString(modulo(b)).concat(",").concat(byteToString(modulo(invert(b1)))));
+				if (modulo(invert(b1)).length != b1.length)
+				{
+					b[0] += 1;
+					byte[] b2 = modulo(invert(b1));
+					byte[] b3 = new byte[b1.length];
+					b3[0] = 0;
+					for (int i = 1; i < b1.length; i++)
+					{
+						b3[i] = b2[i];
+					}
+					return new BN(charToString(this.getS()).concat(byteToString(modulo(b))).concat(",").concat(byteToString(b3)));
+				}
+				else
+					return new BN(charToString(this.getS()).concat(byteToString(modulo(b))).concat(",").concat(byteToString(modulo(invert(b1)))));
+			}
+			else
+			{
+
+
+
+				return this;//provvisorio
+			}
 	}
 
 }
