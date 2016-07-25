@@ -14,3 +14,5 @@ out/production/BigNumber/BigNumbers.BNIntegerException.class
 out/artifacts/BIgNumberLibrary
 
 *.DS_store
+
+out/production/BigNumber/META-INF/MANIFEST.MF
