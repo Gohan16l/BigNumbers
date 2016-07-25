@@ -285,6 +285,10 @@ public class BN {
 				break;
 			case '9':
 				break;
+			case p:
+				break;
+			case m:
+				break;
 			default:
 				throw new BNIntegerException();
 		}
@@ -399,7 +403,7 @@ public class BN {
 
 		byte[] r;
 		int i=0;
-		if(b[b.length - 1] >= 10)
+		if(b[ b.length - 1 ] >= 10)
 		{
 			r = new byte[b.length + 1];
 			rest = (byte) (b[b.length - 1]%10);
@@ -433,7 +437,7 @@ public class BN {
 
 			if(addend.getS()==this.getS())
 			{
-				if (addend.getd().isEmpty()) //case without d string
+				if (addend.getd().isEmpty() && this.getd().isEmpty()) //case without d string
 				{
 					b1 = new byte[0];
 					if (addend.length() < this.length())
@@ -609,20 +613,27 @@ public class BN {
 //			}
 //		}
 
-				if (modulo(invert(b1)).length != b1.length)
+				if (!(b1.length==1 && b1[0]==0))
 				{
-					b[0] += 1;
-					byte[] b2 = modulo(invert(b1));
-					byte[] b3 = new byte[b1.length];
-					b3[0] = 0;
-					for (int i = 1; i < b1.length; i++)
+					if (modulo(invert(b1)).length != b1.length)
 					{
-						b3[i] = b2[i];
+						b[0] += 1;
+						byte[] b2 = modulo(invert(b1));
+						byte[] b3 = new byte[b1.length];
+						b3[0] = 0;
+						for (int i = 1; i < b1.length; i++)
+						{
+							b3[i] = b2[i];
+						}
+						return new BN(/*charToString(this.getS()).concat(*/byteToString(modulo(b))/*)*/.concat(",").concat(byteToString(b3)));
 					}
-					return new BN(charToString(this.getS()).concat(byteToString(modulo(b))).concat(",").concat(byteToString(b3)));
+					else
+						return new BN(/*charToString(this.getS()).concat(*/byteToString(modulo(b))/*)*/.concat(",").concat(byteToString(modulo(invert(b1)))));
 				}
 				else
-					return new BN(charToString(this.getS()).concat(byteToString(modulo(b))).concat(",").concat(byteToString(modulo(invert(b1)))));
+				{
+					return new BN(byteToString(modulo(b)));
+				}
 			}
 			else
 			{
