@@ -14,7 +14,7 @@ public class BN {
 	private static final char comma = ',', period = '.';
 	private static final char p = '+', m = '-';
 	private long id;
-	private static long counter = -1;
+	private static long counter = 0;
 
 
 //costruttori
@@ -174,6 +174,19 @@ public class BN {
 		}
 	}
 
+	//check original isn't null
+	private boolean originalIsNotNull ()
+	{
+		if(original.isEmpty() || original.equals(null))
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+	}
+
 	//count of all objects created with this class
 	private static void counter ()
 	{
@@ -264,184 +277,199 @@ public class BN {
 	//constructor for re-initialize
 	private void BNInitialize()
 	{
-		//check the first character
 		try
 		{
-			generateIntegerException();
-		}
-		catch (BNIntegerException e)
-		{
-			System.out.println(e.getError());
-			System.exit(1001);
-		}
-
-		counter();
-
-		//set id
-		setID(BN.getCounter());
-
-
-		//set s
-		int n = 0;
-		if (original.charAt(0) == p || original.charAt(0) == m)
-		{
-			setS(original.charAt(0));
-			n = 1;
-		}
-		else
-		{
-			setS(p);
-		}
-
-		//declaration of boolean variable to use it later in try block
-		boolean b1 = true;
-
-		//set of i and d
-		try
-		{
-			i = "";
-			d = "";
-			while (n < original.length())
+			//check original is not null
+			if (!originalIsNotNull())
 			{
-				char c = original.charAt(n++);
-				switch (c)
+				throw new BNInputException();
+			}
+
+			//check the first character
+			try
+			{
+				generateIntegerException();
+			}
+			catch (BNIntegerException e)
+			{
+				System.out.println(e.getError());
+				System.exit(1001);
+			}
+
+
+			counter();
+
+			//set id
+			setID(BN.getCounter()-1);
+
+
+			//set s
+			int n = 0;
+			if (original.charAt(0) == p || original.charAt(0) == m)
+			{
+				setS(original.charAt(0));
+				n = 1;
+			}
+			else
+			{
+				setS(p);
+			}
+
+			//declaration of boolean variable to use it later in try block
+			boolean b1 = true;
+
+			//set of i and d
+			try
+			{
+				i = "";
+				d = "";
+				while (n < original.length())
 				{
-					case '0':
-						if (b1)
-						{
-							i = i.concat("0");
-						}
-						else
-						{
-							d = d.concat("0");
-						}
-						;
-						break;
-					case '1':
-						if (b1)
-						{
-							i = i.concat("1");
-						}
-						else
-						{
-							d = d.concat("1");
-						}
-						;
-						break;
-					case '2':
-						if (b1)
-						{
-							i = i.concat("2");
-						}
-						else
-						{
-							d = d.concat("2");
-						}
-						;
-						break;
-					case '3':
-						if (b1)
-						{
-							i = i.concat("3");
-						}
-						else
-						{
-							d = d.concat("3");
-						}
-						;
-						break;
-					case '4':
-						if (b1)
-						{
-							i = i.concat("4");
-						}
-						else
-						{
-							d = d.concat("4");
-						}
-						;
-						break;
-					case '5':
-						if (b1)
-						{
-							i = i.concat("5");
-						}
-						else
-						{
-							d = d.concat("5");
-						}
-						;
-						break;
-					case '6':
-						if (b1)
-						{
-							i = i.concat("6");
-						}
-						else
-						{
-							d = d.concat("6");
-						}
-						;
-						break;
-					case '7':
-						if (b1)
-						{
-							i = i.concat("7");
-						}
-						else
-						{
-							d = d.concat("7");
-						}
-						;
-						break;
-					case '8':
-						if (b1)
-						{
-							i = i.concat("8");
-						}
-						else
-						{
-							d = d.concat("8");
-						}
-						;
-						break;
-					case '9':
-						if (b1)
-						{
-							i = i.concat("9");
-						}
-						else
-						{
-							d = d.concat("9");
-						}
-						;
-						break;
-					case comma:
-						b1 = false;
-						break;
-					case period:
-						b1 = false;
-						break;
-					default:
-						throw new BNCharacterException();
+					char c = original.charAt(n++);
+					switch (c)
+					{
+						case '0':
+							if (b1)
+							{
+								i = i.concat("0");
+							}
+							else
+							{
+								d = d.concat("0");
+							}
+							;
+							break;
+						case '1':
+							if (b1)
+							{
+								i = i.concat("1");
+							}
+							else
+							{
+								d = d.concat("1");
+							}
+							;
+							break;
+						case '2':
+							if (b1)
+							{
+								i = i.concat("2");
+							}
+							else
+							{
+								d = d.concat("2");
+							}
+							;
+							break;
+						case '3':
+							if (b1)
+							{
+								i = i.concat("3");
+							}
+							else
+							{
+								d = d.concat("3");
+							}
+							;
+							break;
+						case '4':
+							if (b1)
+							{
+								i = i.concat("4");
+							}
+							else
+							{
+								d = d.concat("4");
+							}
+							;
+							break;
+						case '5':
+							if (b1)
+							{
+								i = i.concat("5");
+							}
+							else
+							{
+								d = d.concat("5");
+							}
+							;
+							break;
+						case '6':
+							if (b1)
+							{
+								i = i.concat("6");
+							}
+							else
+							{
+								d = d.concat("6");
+							}
+							;
+							break;
+						case '7':
+							if (b1)
+							{
+								i = i.concat("7");
+							}
+							else
+							{
+								d = d.concat("7");
+							}
+							;
+							break;
+						case '8':
+							if (b1)
+							{
+								i = i.concat("8");
+							}
+							else
+							{
+								d = d.concat("8");
+							}
+							;
+							break;
+						case '9':
+							if (b1)
+							{
+								i = i.concat("9");
+							}
+							else
+							{
+								d = d.concat("9");
+							}
+							;
+							break;
+						case comma:
+							b1 = false;
+							break;
+						case period:
+							b1 = false;
+							break;
+						default:
+							throw new BNCharacterException();
+					}
 				}
 			}
-		}
 
-		//exception if original contains character not valid
-		catch (BNCharacterException e)
+			//exception if original contains character not valid
+			catch (BNCharacterException e)
+			{
+				System.out.println(e.getError());
+				System.exit(1002);
+			}
+
+			//set I and D
+			setI(stringToByte(geti()));
+			setD(invert(stringToByte(getd())));
+		}
+		catch (BNInputException e)
 		{
 			System.out.println(e.getError());
-			System.exit(1002);
+			System.exit(1003);
 		}
-
-		//set I and D
-		setI(stringToByte(geti()));
-		setD(invert(stringToByte(getd())));
 	}
 
 	//re-initialize BN
-	public void reinitialize()
+	public void reInitialize()
 	{
 		BNInitialize();
 	}
@@ -966,8 +994,11 @@ public class BN {
 									z--;
 								}
 							}/*ammaccabanane*/
-							b1[i] = add(this.DByteAt(i), invert(addend.DByteAt(i)));
+							b1[i] = (byte) Math.abs(add(this.DByteAt(i), invert(addend.DByteAt(i))));
 						}
+
+						if (Iequals)
+							c1 = m;
 					}
 					else if (addend.DLength() > this.DLength()) //case A>B
 					{
@@ -993,10 +1024,8 @@ public class BN {
 									z--;
 								}
 							}
-							b1[i] = add(addend.DByteAt(i), invert(this.DByteAt(i)));
+							b1[i] = (byte) Math.abs(add(addend.DByteAt(i), invert(this.DByteAt(i))));
 						}
-						if (Iequals)
-							c1 = m;
 					}/*ammmaccabaae*/
 					else //case A=B
 					{
@@ -1006,7 +1035,6 @@ public class BN {
 						{
 							if (Byte.compare(addend.DByteAt(i), this.DByteAt(i)) < 0)
 							{
-								/*!!!!!!!DA RIGUARDARE!!!!!!*/
 								if (Byte.compare(addend.DByteAt(i), this.DByteAt(i)) > 0 && i < this.DLength() - 1) //rest and unit
 								{
 									this.setD(sumByteAt(this.getD(), i + 1, -1));
@@ -1027,6 +1055,14 @@ public class BN {
 
 							i++;
 						}
+					}
+
+
+					if(addend.DLength()==0 || this.DLength()==0)
+					{
+						BN provv = new BN(byteToString(b));
+						b = provv.sum(new BN("-1")).getI();
+						b1[0] = add((byte) 10, invert(b1[0]));
 					}
 
 						/*if (!(b1.length==1 && b1[0]==0))//unit rest from D to I
@@ -1052,8 +1088,305 @@ public class BN {
 			}
 			else
 			{
-				C = new BN();
-				/*****************************************************************************/
+				if (addend.getd().isEmpty() && this.getd().isEmpty()) //case without d string
+				{
+					b1 = new byte[1];
+					if (addend.ILength() < this.ILength()) //case A<B
+					{
+						b = new byte[this.length()];
+						for (int i = 0, n = i + 1;  i < addend.length(); i++)
+						{
+							if (Byte.compare(addend.IByteAt(i), this.IByteAt(i)) > 0 && i < addend.ILength()) //rest and unit
+							{
+								int z=i;
+								while (z < this.ILength())
+								{
+									if (this.IByteAt(z) <= 0 && z < this.length() - 1)
+									{
+										this.setI(sumByteAt(this.getI(), z + n, -1));
+										this.setI(sumByteAt(this.getI(), z, +10));
+									}
+									z++;
+								}
+							}
+							b[i] = add(this.IByteAt(i), invert(addend.IByteAt(i)));
+						}
+						for (int i = addend.length(); i < this.length(); i++)
+						{
+							b[i] = this.IByteAt(i);
+						}
+						C = new BN(byteToString(modulo(b)));
+						C.setS(m);
+					}
+					else if (addend.ILength() > this.ILength()) //case A>B
+					{
+						b = new byte[addend.length()];
+						for (int i = 0, n = i + 1; i < this.length(); i++)
+						{
+							if (Byte.compare(addend.IByteAt(i), this.IByteAt(i)) < 0 && i <= this.ILength() - 1) //rest and unit
+							{
+								int z=i;
+								while (z < addend.ILength())
+								{
+									if (addend.IByteAt(z) <= 0 && z < addend.length() - 1)
+									{
+										addend.setI(sumByteAt(addend.getI(), z + n, -1));
+										addend.setI(sumByteAt(addend.getI(), z, +10));
+									}
+									z++;
+								}
+							}
+
+							b[i] = add(addend.IByteAt(i), invert(this.IByteAt(i)));
+						}
+						for (int i = this.length(); i < addend.length(); i++)
+						{
+							b[i] = addend.IByteAt(i);
+						}
+						C = new BN(byteToString(modulo(b)));
+					}
+					else //case A=B
+					{
+						char c1=p;
+						int i = this.ILength() - 1;
+						b = new byte[addend.length()];
+						while (i >= 0)
+						{
+							if (Byte.compare(addend.IByteAt(i), this.IByteAt(i)) < 0)
+							{
+								if (Byte.compare(addend.IByteAt(i), this.IByteAt(i)) > 0 && i < this.ILength() - 1) //rest and unit
+								{
+									this.setI(sumByteAt(this.getI(), i + 1, -1));
+									this.setI(sumByteAt(this.getI(), i, +10));
+								}
+								b[i] = add(this.IByteAt(i), invert(addend.IByteAt(i)));
+								c1=m;
+							}
+							else if (Byte.compare(addend.IByteAt(i), this.IByteAt(i)) > 0)
+							{
+								if (Byte.compare(addend.IByteAt(i), this.IByteAt(i)) < 0 && i < this.ILength() - 1) //rest and unit
+								{
+									addend.setI(sumByteAt(addend.getI(), i + 1, -1));
+									addend.setI(sumByteAt(addend.getI(), i, +10));
+								}
+								b[i] = add(addend.IByteAt(i), invert(this.IByteAt(i)));
+
+							}
+
+							i--;
+						}
+						C = new BN(charToString(c1).concat(byteToString(modulo(b))));
+					}
+				}
+				else //case with d string
+				{
+					char c1 = p;
+					boolean Iequals=false;
+
+					//integer
+					if (addend.ILength() < this.ILength()) //case A<B
+					{
+						b = new byte[this.ILength()];
+						for (int i = 0, n = i + 1; i < addend.ILength(); i++)
+						{
+							if (Byte.compare(addend.IByteAt(i), this.IByteAt(i)) > 0 && i < addend.ILength()) //rest and unit
+							{
+								int z=i;
+								while (z < this.ILength())
+								{
+									if (this.IByteAt(z) <= 0 && z < this.length() - 1)
+									{
+										this.setI(sumByteAt(this.getI(), z + n, -1));
+										this.setI(sumByteAt(this.getI(), z, +10));
+									}
+									z++;
+								}
+							}
+							b[i] = add(this.IByteAt(i), invert(addend.IByteAt(i)));
+						}
+						for (int i = addend.ILength(); i < this.ILength(); i++)
+						{
+							b[i] = this.IByteAt(i);
+						}
+						c1 = m;//provvissorio e non necessario, forse
+					}
+					else if (addend.ILength() > this.ILength()) //case A>B
+					{
+						b = new byte[addend.ILength()];
+						for (int i = 0, n = i + 1; i < this.ILength(); i++)
+						{
+							if (Byte.compare(addend.IByteAt(i), this.IByteAt(i)) < 0 && i < this.ILength()) //rest and unit
+							{
+								int z=i;
+								while (z < addend.ILength())
+								{
+									if (addend.IByteAt(z) <= 0 && z < addend.length() - 1)
+									{
+										addend.setI(sumByteAt(addend.getI(), z + n, -1));
+										addend.setI(sumByteAt(addend.getI(), z, +10));
+									}
+									z++;
+								}
+							}
+							b[i] = add(addend.IByteAt(i), invert(this.IByteAt(i)));
+						}
+						for (int i = this.ILength(); i < addend.ILength(); i++)
+						{
+							b[i] = addend.IByteAt(i);
+						}
+					}
+					else //case A=B
+					{
+						int i = this.ILength() - 1;
+						b = new byte[addend.ILength()];
+						while (i >= 0)
+						{
+							if (Byte.compare(addend.IByteAt(i), this.IByteAt(i)) < 0)
+							{
+								if (Byte.compare(addend.IByteAt(i), this.IByteAt(i)) > 0 && i < this.ILength() - 1) //rest and unit
+								{
+									this.setI(sumByteAt(this.getI(), i + 1, -1));
+									this.setI(sumByteAt(this.getI(), i, +10));
+								}
+								b[i] = add(this.IByteAt(i), invert(addend.IByteAt(i)));
+								Iequals=true;
+								c1=m;
+							}
+							else if (Byte.compare(addend.IByteAt(i), this.IByteAt(i)) > 0)
+							{
+								if (Byte.compare(addend.IByteAt(i), this.IByteAt(i)) < 0 && i < this.ILength() - 1) //rest and unit
+								{
+									addend.setI(sumByteAt(addend.getI(), i + 1, -1));
+									addend.setI(sumByteAt(addend.getI(), i, +10));
+								}
+								b[i] = add(addend.IByteAt(i), invert(this.IByteAt(i)));
+								Iequals=false;
+							}
+							else
+							{
+								Iequals=true;
+							}
+
+							i--;
+						}
+					}
+
+					//decimal
+					if (addend.DLength() < this.DLength()) //case A<B
+					{
+						b1 = new byte[this.DLength()];
+
+						for (int i = this.DLength()-1; i >= addend.DLength(); i--)
+						{
+							b1[i] = this.DByteAt(i);
+						}
+
+						for (int i = addend.DLength()-1; i >= 0; i--)
+						{
+							if (Byte.compare(addend.DByteAt(i), this.DByteAt(i)) > 0 && i >= 0) //rest and unit
+							{
+								int z=i;
+								while (z > 0)
+								{
+									if (this.DByteAt(z) <= 0 && z > 0)
+									{
+										this.setD(sumByteAt(this.getD(), z -1, -1));
+										this.setD(sumByteAt(this.getD(), z, +10));
+									}
+									z--;
+								}
+							}
+							b1[i] = (byte) Math.abs(add(this.DByteAt(i), invert(addend.DByteAt(i))));
+						}
+
+					}
+					else if (addend.DLength() > this.DLength()) //case A>B
+					{
+						b1 = new byte[addend.DLength()];
+
+						for (int i = addend.DLength()-1; i >= this.DLength(); i--)
+						{
+							b1[i] = addend.DByteAt(i);
+						}
+
+						for (int i = this.DLength()-1; i >= 0; i--)
+						{
+							if (Byte.compare(addend.DByteAt(i), this.DByteAt(i)) < 0 && i >= 0) //rest and unit
+							{
+								int z=i;
+								while (z > 0)
+								{
+									if (addend.DByteAt(z) <= 0 && z > 0)
+									{
+										addend.setD(sumByteAt(addend.getD(), z - 1, -1));
+										addend.setD(sumByteAt(addend.getD(), z, +10));
+									}
+									z--;
+								}
+							}
+							b1[i] = (byte) Math.abs(add(addend.DByteAt(i), invert(this.DByteAt(i))));
+						}
+						if (Iequals)
+							c1 = m;
+					}
+					else //case A=B
+					{
+						b1 = new byte[addend.DLength()];
+						int i = 0;
+						while (i < this.DLength())
+						{
+							if (Byte.compare(addend.DByteAt(i), this.DByteAt(i)) < 0)
+							{
+								if (Byte.compare(addend.DByteAt(i), this.DByteAt(i)) > 0 && i < this.DLength() - 1) //rest and unit
+								{
+									this.setD(sumByteAt(this.getD(), i + 1, -1));
+									this.setD(sumByteAt(this.getD(), i, +10));
+								}
+								b1[i] = add(this.DByteAt(i), invert(addend.DByteAt(i)));
+								c1=m;
+							}
+							else if (Byte.compare(addend.DByteAt(i), this.DByteAt(i)) > 0)
+							{
+								if (Byte.compare(addend.DByteAt(i), this.DByteAt(i)) < 0 && i < this.DLength() - 1) //rest and unit
+								{
+									addend.setD(sumByteAt(addend.getD(), i + 1, -1));
+									addend.setD(sumByteAt(addend.getD(), i, +10));
+								}
+								b1[i] = add(addend.DByteAt(i), invert(this.DByteAt(i)));
+							}
+
+							i++;
+						}
+					}
+
+
+					if(addend.DLength()==0 || this.DLength()==0)
+					{
+						BN provv = new BN(byteToString(b));
+						b = provv.sum(new BN("-1")).getI();
+						b1[0] = add((byte) 10, invert(b1[0]));
+					}
+
+
+					if ((modulo(invert(b1)).length != b1.length) )//check rest is necessary
+					{
+						b[0] += 1;
+						byte[] b2 = modulo(invert(b1));
+						byte[] b3 = new byte[b1.length];
+						b3[0] = 0;
+						for (int i = 1; i < b1.length; i++)
+						{
+							b3[i] = b2[i];
+						}
+						C = new BN(charToString(c1).concat(byteToString(modulo(b))).concat(",").concat(byteToString(b3)));
+					}
+					else
+					{
+						C = new BN(charToString(c1).concat(byteToString(modulo(b))).concat(",").concat(byteToString(modulo(invert(b1)))));
+					}
+
+				}
+				/*************************************************************************/
 			}
 		}
 
