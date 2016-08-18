@@ -6,7 +6,7 @@ package BigNumbers;
  */
 
 public class BN {
-	//stato interno
+//internal variables
 	private String original, abs;
 	private char s;
 	private String i, d;
@@ -17,7 +17,7 @@ public class BN {
 	private static long counter = 0;
 
 
-//costruttori
+//constructors
 
 	//constructor null
 	public BN ()
@@ -35,11 +35,16 @@ public class BN {
 		//set original string
 		setOriginal(input);
 
+		counter();
+
+		//set id
+		setID(BN.getCounter()-1);
+
 		BNInitialize();
 	}
 
 
-//manipolatori
+//manipulators
 	public String getOriginal ()
 	{
 		return original;
@@ -48,11 +53,11 @@ public class BN {
 	{
 		this.original = original;
 	}
-	public String getAbs ()
+	private String getAbs ()
 	{
 		return abs;
 	}
-	public void setAbs (String abs)
+	private void setAbs (String abs)
 	{
 		this.abs = abs;
 	}
@@ -60,7 +65,7 @@ public class BN {
 	{
 		return i;
 	}
-	public void seti (String i)
+	private void seti (String i)
 	{
 		this.i = i;
 	}
@@ -68,7 +73,7 @@ public class BN {
 	{
 		return d;
 	}
-	public void setd (String d)
+	private void setd (String d)
 	{
 		this.d = d;
 	}
@@ -126,7 +131,7 @@ public class BN {
 	}
 
 
-//metodi
+//methods
 
 	//create an Exception for integer's array
 	private void generateIntegerException () throws BNIntegerException
@@ -134,40 +139,40 @@ public class BN {
 		switch (original.charAt(0))
 		{
 			case '0':
-				abs = original;
+				setAbs(original);
 				break;
 			case '1':
-				abs = original;
+				setAbs(original);
 				break;
 			case '2':
-				abs = original;
+				setAbs(original);
 				break;
 			case '3':
-				abs = original;
+				setAbs(original);
 				break;
 			case '4':
-				abs = original;
+				setAbs(original);
 				break;
 			case '5':
-				abs = original;
+				setAbs(original);
 				break;
 			case '6':
-				abs = original;
+				setAbs(original);
 				break;
 			case '7':
-				abs = original;
+				setAbs(original);
 				break;
 			case '8':
-				abs = original;
+				setAbs(original);
 				break;
 			case '9':
-				abs = original;
+				setAbs(original);
 				break;
 			case p:
-				abs = original.substring(1);
+				setAbs(original.substring(1));
 				break;
 			case m:
-				abs = original.substring(1);
+				setAbs(original.substring(1));
 				break;
 			default:
 				throw new BNIntegerException();
@@ -177,14 +182,7 @@ public class BN {
 	//check original isn't null
 	private boolean originalIsNotNull ()
 	{
-		if(original.isEmpty() || original.equals(null))
-		{
-			return false;
-		}
-		else
-		{
-			return true;
-		}
+		return !(original.isEmpty() || original.equals(null));
 	}
 
 	//count of all objects created with this class
@@ -232,7 +230,7 @@ public class BN {
 	//return a string with only a digit(the character input)
 	private static String charToString (char c)
 	{
-		String s = "";
+		String s;
 		s = String.valueOf(c);
 		return s;
 	}
@@ -297,12 +295,6 @@ public class BN {
 			}
 
 
-			counter();
-
-			//set id
-			setID(BN.getCounter()-1);
-
-
 			//set s
 			int n = 0;
 			if (original.charAt(0) == p || original.charAt(0) == m)
@@ -321,8 +313,8 @@ public class BN {
 			//set of i and d
 			try
 			{
-				i = "";
-				d = "";
+				seti("");
+				setd("");
 				while (n < original.length())
 				{
 					char c = original.charAt(n++);
@@ -337,7 +329,6 @@ public class BN {
 							{
 								d = d.concat("0");
 							}
-							;
 							break;
 						case '1':
 							if (b1)
@@ -348,7 +339,6 @@ public class BN {
 							{
 								d = d.concat("1");
 							}
-							;
 							break;
 						case '2':
 							if (b1)
@@ -359,7 +349,6 @@ public class BN {
 							{
 								d = d.concat("2");
 							}
-							;
 							break;
 						case '3':
 							if (b1)
@@ -370,7 +359,6 @@ public class BN {
 							{
 								d = d.concat("3");
 							}
-							;
 							break;
 						case '4':
 							if (b1)
@@ -381,7 +369,6 @@ public class BN {
 							{
 								d = d.concat("4");
 							}
-							;
 							break;
 						case '5':
 							if (b1)
@@ -392,7 +379,6 @@ public class BN {
 							{
 								d = d.concat("5");
 							}
-							;
 							break;
 						case '6':
 							if (b1)
@@ -403,7 +389,6 @@ public class BN {
 							{
 								d = d.concat("6");
 							}
-							;
 							break;
 						case '7':
 							if (b1)
@@ -414,7 +399,6 @@ public class BN {
 							{
 								d = d.concat("7");
 							}
-							;
 							break;
 						case '8':
 							if (b1)
@@ -425,7 +409,6 @@ public class BN {
 							{
 								d = d.concat("8");
 							}
-							;
 							break;
 						case '9':
 							if (b1)
@@ -436,7 +419,6 @@ public class BN {
 							{
 								d = d.concat("9");
 							}
-							;
 							break;
 						case comma:
 							b1 = false;
@@ -469,7 +451,7 @@ public class BN {
 	}
 
 	//re-initialize BN
-	public void reInitialize()
+	private void reInitialize()
 	{
 		BNInitialize();
 	}
@@ -577,71 +559,47 @@ public class BN {
 
 		if (addend.getS() == this.getS())//case with same S
 		{
+
+			//integer
+			if (addend.ILength() > this.ILength()) //case A>B
+			{
+				b = new byte[addend.ILength()];
+				for (int i = 0; i < this.ILength(); i++)
+				{
+					b[i] = add(addend.IByteAt(i), this.IByteAt(i));
+				}
+				for (int i = this.ILength(); i < addend.ILength(); i++)
+				{
+					b[i] = addend.IByteAt(i);
+				}
+			}
+			else if (addend.ILength() < this.ILength()) //case A<B
+			{
+				b = new byte[this.ILength()];
+				for (int i = 0; i < addend.ILength(); i++)
+				{
+					b[i] = add(addend.IByteAt(i), this.IByteAt(i));
+				}
+				for (int i = addend.ILength(); i < this.ILength(); i++)
+				{
+					b[i] = this.IByteAt(i);
+				}
+			}
+			else //case A=B
+			{
+				b = new byte[this.ILength()];
+				for (int i = 0; i < this.ILength(); i++)
+				{
+					b[i] = add(addend.IByteAt(i), this.IByteAt(i));
+				}
+			}
+
 			if (addend.getd().isEmpty() && this.getd().isEmpty()) //case without d string
 			{
 				b1 = new byte[1];
-				//b1[0]=0;
-				if (addend.length() < this.length()) //case A<B
-				{
-					b = new byte[this.length()];
-					for (int i = 0; i < addend.length(); i++)
-					{
-						b[i] = add(addend.IByteAt(i), this.IByteAt(i));
-					}
-					for (int i = addend.length(); i < this.length(); i++)
-					{
-						b[i] = this.IByteAt(i);
-					}
-				}
-				else //other case
-				{
-					b = new byte[addend.length()];
-					for (int i = 0; i < this.length(); i++)
-					{
-						b[i] = add(addend.IByteAt(i), this.IByteAt(i));
-					}
-					for (int i = this.length(); i < addend.length(); i++)
-					{
-						b[i] = addend.IByteAt(i);
-					}
-				}
 			}
-			else //case with d string
+			else
 			{
-				//integer
-				if (addend.ILength() > this.ILength()) //case A>B
-				{
-					b = new byte[addend.ILength()];
-					for (int i = 0; i < this.ILength(); i++)
-					{
-						b[i] = add(addend.IByteAt(i), this.IByteAt(i));
-					}
-					for (int i = this.ILength(); i < addend.ILength(); i++)
-					{
-						b[i] = addend.IByteAt(i);
-					}
-				}
-				else if (addend.ILength() < this.ILength()) //case A<B
-				{
-					b = new byte[this.ILength()];
-					for (int i = 0; i < addend.ILength(); i++)
-					{
-						b[i] = add(addend.IByteAt(i), this.IByteAt(i));
-					}
-					for (int i = addend.ILength(); i < this.ILength(); i++)
-					{
-						b[i] = this.IByteAt(i);
-					}
-				}
-				else //case A=B
-				{
-					b = new byte[this.ILength()];
-					for (int i = 0; i < this.ILength(); i++)
-					{
-						b[i] = add(addend.IByteAt(i), this.IByteAt(i));
-					}
-				}
-
 				//decimal
 				if (addend.DLength() > this.DLength()) //case A>B
 				{
@@ -676,86 +634,6 @@ public class BN {
 					}
 				}
 			}
-			//}
-//		else //this is a repetition, to optimize!
-//		{
-//			if (addend.getd().isEmpty())
-//			{
-//				b1 = new byte[0];
-//				b = new byte[this.length()];
-//				for (int i = 0; i < this.length(); i++)
-//				{
-//					b[i] = add(addend.IByteAt(i), this.IByteAt(i));
-//				}
-//			}
-//			else
-//			{
-//				if(addend.ILength()>this.ILength()) //integer
-//				{
-//					b = new byte[addend.ILength()];
-//					for (int i = 0; i < addend.ILength(); i++)
-//					{
-//						b[i] = add(addend.IByteAt(i), this.IByteAt(i));
-//					}
-//					for (int i = this.ILength(); i < addend.ILength(); i++)
-//					{
-//						b[i] = addend.IByteAt(i);
-//					}
-//				}
-//				else if(addend.ILength()<this.ILength())
-//				{
-//					b = new byte[this.ILength()];
-//					for (int i = 0; i < this.ILength(); i++)
-//					{
-//						b[i] = add(addend.IByteAt(i), this.IByteAt(i));
-//					}
-//					for (int i = addend.ILength(); i < this.ILength(); i++)
-//					{
-//						b[i] = this.IByteAt(i);
-//					}
-//				}
-//				else
-//				{
-//					b = new byte[this.ILength()];
-//					for (int i = 0; i < this.ILength(); i++)
-//					{
-//						b[i] = add(addend.IByteAt(i), this.IByteAt(i));
-//					}
-//				}
-//				if(addend.DLength()>this.DLength()) //decimal
-//				{
-//					b1 = new byte[addend.DLength()];
-//					for (int i = 0; i < addend.DLength(); i++)
-//					{
-//						b1[i] = add(addend.DByteAt(i), this.DByteAt(i));
-//					}
-//					for (int i = this.DLength(); i < addend.DLength(); i++)
-//					{
-//						b1[i] = addend.DByteAt(i);
-//					}
-//				}
-//				else if (addend.DLength()<this.DLength())
-//				{
-//					b1 = new byte[this.DLength()];
-//					for (int i = 0; i < this.DLength(); i++)
-//					{
-//						b1[i] = add(addend.DByteAt(i), this.DByteAt(i));
-//					}
-//					for (int i = addend.DLength(); i < this.DLength(); i++)
-//					{
-//						b1[i] = this.DByteAt(i);
-//					}
-//				}
-//				else
-//				{
-//					b1 = new byte[addend.DLength()];
-//					for (int i = 0; i < addend.DLength(); i++)
-//					{
-//						b1[i] = add(addend.DByteAt(i), this.DByteAt(i));
-//					}
-//				}
-//			}
-//		}
 
 			if (!(b1.length == 1 && b1[0] == 0))//unit rest from D to I
 			{
@@ -765,10 +643,7 @@ public class BN {
 					byte[] b2 = modulo(invert(b1));
 					byte[] b3 = new byte[b1.length];
 					b3[0] = 0;
-					for (int i = 1; i < b1.length; i++)
-					{
-						b3[i] = b2[i];
-					}
+					System.arraycopy(b2, 1, b3, 1, b1.length - 1);
 					return new BN(charToString(this.getS()).concat(byteToString(modulo(b))).concat(",").concat(byteToString(b3)));
 				}
 				else
@@ -783,237 +658,161 @@ public class BN {
 		}
 		else//case with different S
 		{
+			char c1 = p;
+			boolean Iequals = false;
+
 			if (addend.getS() == m)//case S is -
 			{
-				if (addend.getd().isEmpty() && this.getd().isEmpty()) //case without d string
+				//integer
+				if (addend.ILength() < this.ILength()) //case A<B
+				{
+					b = new byte[this.ILength()];
+					for (int i = 0, n = i + 1; i < addend.ILength(); i++)
+					{
+						if (Byte.compare(addend.IByteAt(i), this.IByteAt(i)) > 0 && i < addend.ILength()) //rest and unit
+						{
+							int z = i;
+							while (z < this.ILength())
+							{
+								if (this.IByteAt(z) <= 0 && z < this.length() - 1)
+								{
+									this.setI(sumByteAt(this.getI(), z + n, -1));
+									this.setI(sumByteAt(this.getI(), z, +10));
+								}
+								z++;
+							}
+						}
+						b[i] = add(this.IByteAt(i), invert(addend.IByteAt(i)));
+					}
+					for (int i = addend.ILength(); i < this.ILength(); i++)
+					{
+						b[i] = this.IByteAt(i);
+					}
+					C = new BN(byteToString(modulo(b)));
+				}
+				else if (addend.ILength() > this.ILength()) //case A>B
+				{
+					b = new byte[addend.ILength()];
+					for (int i = 0, n = i + 1; i < this.ILength(); i++)
+					{
+						if (Byte.compare(addend.IByteAt(i), this.IByteAt(i)) < 0 && i <= this.ILength() - 1) //rest and unit
+						{
+							int z = i;
+							while (z < addend.ILength())
+							{
+								if (addend.IByteAt(z) <= 0 && z < addend.ILength() - 1)
+								{
+									addend.setI(sumByteAt(addend.getI(), z + n, -1));
+									addend.setI(sumByteAt(addend.getI(), z, +10));
+								}
+								z++;
+							}
+						}
+
+						b[i] = add(addend.IByteAt(i), invert(this.IByteAt(i)));
+					}
+					for (int i = this.ILength(); i < addend.ILength(); i++)
+					{
+						b[i] = addend.IByteAt(i);
+					}
+					C = new BN(byteToString(modulo(b)));
+					C.setS(m);
+				}
+				else //case A=B
+				{
+					int i = this.ILength() - 1;
+					b = new byte[addend.ILength()];
+					while (i >= 0)
+					{
+						if (Byte.compare(addend.IByteAt(i), this.IByteAt(i)) < 0)
+						{
+							while (i >= 0)
+							{
+								if (Byte.compare(addend.IByteAt(i), this.IByteAt(i)) > 0 && i < this.ILength() - 1) //rest and unit
+								{
+									b = sumByteAt(b, i + 1, -1);
+									b = sumByteAt(b, i, 10);
+								}
+								b = sumByteAt(b, i, add(this.IByteAt(i), invert(addend.IByteAt(i))));
+								Iequals = true;
+
+								i--;
+							}
+						}
+						else if (Byte.compare(addend.IByteAt(i), this.IByteAt(i)) > 0)
+						{
+							while (i >= 0)
+							{
+								if (Byte.compare(addend.IByteAt(i), this.IByteAt(i)) < 0 && i < this.ILength() - 1) //rest and unit
+								{
+									b = sumByteAt(b, i + 1, -1);
+									b = sumByteAt(b, i, 10);
+								}
+								b = sumByteAt(b, i, (add(addend.IByteAt(i), invert(this.IByteAt(i)))));
+								Iequals = false;
+								c1 = m;
+
+								i--;
+							}
+						}
+						else
+						{
+							Iequals = true;
+						}
+
+						i--;
+					}
+					C = new BN(charToString(c1).concat(byteToString(modulo(b))));
+				}
+
+				if (addend.getd().isEmpty() && this.getd().isEmpty())
 				{
 					b1 = new byte[1];
-					if (addend.ILength() < this.ILength()) //case A<B
-					{
-						b = new byte[this.length()];
-						for (int i = 0, n = i + 1;  i < addend.length(); i++)
-						{
-							if (Byte.compare(addend.IByteAt(i), this.IByteAt(i)) > 0 && i < addend.ILength()) //rest and unit
-							{
-								int z=i;
-								while (z < this.ILength())
-								{
-									if (this.IByteAt(z) <= 0 && z < this.length() - 1)
-									{
-										this.setI(sumByteAt(this.getI(), z + n, -1));
-										this.setI(sumByteAt(this.getI(), z, +10));
-									}
-									z++;
-								}
-							}
-							b[i] = add(this.IByteAt(i), invert(addend.IByteAt(i)));
-						}
-						for (int i = addend.length(); i < this.length(); i++)
-						{
-							b[i] = this.IByteAt(i);
-						}
-						C = new BN(byteToString(modulo(b)));
-					}
-					else if (addend.ILength() > this.ILength()) //case A>B
-					{
-						b = new byte[addend.length()];
-						for (int i = 0, n = i + 1; i < this.length(); i++)
-						{
-							if (Byte.compare(addend.IByteAt(i), this.IByteAt(i)) < 0 && i <= this.ILength() - 1) //rest and unit
-							{
-								int z=i;
-								while (z < addend.ILength())
-								{
-									if (addend.IByteAt(z) <= 0 && z < addend.length() - 1)
-									{
-										addend.setI(sumByteAt(addend.getI(), z + n, -1));
-										addend.setI(sumByteAt(addend.getI(), z, +10));
-									}
-									z++;
-								}
-							}
-
-							b[i] = add(addend.IByteAt(i), invert(this.IByteAt(i)));
-						}
-						for (int i = this.length(); i < addend.length(); i++)
-						{
-							b[i] = addend.IByteAt(i);
-						}
-						C = new BN(byteToString(modulo(b)));
-						C.setS(m);
-					}
-					else //case A=B
-					{
-						char c1=p;
-						int i = this.ILength() - 1;
-						b = new byte[addend.length()];
-						while (i >= 0)
-						{
-							if (Byte.compare(addend.IByteAt(i), this.IByteAt(i)) < 0)
-							{
-								if (Byte.compare(addend.IByteAt(i), this.IByteAt(i)) > 0 && i < this.ILength() - 1) //rest and unit
-								{
-									this.setI(sumByteAt(this.getI(), i + 1, -1));
-									this.setI(sumByteAt(this.getI(), i, +10));
-								}
-								b[i] = add(this.IByteAt(i), invert(addend.IByteAt(i)));
-							}
-							else if (Byte.compare(addend.IByteAt(i), this.IByteAt(i)) > 0)
-							{
-								if (Byte.compare(addend.IByteAt(i), this.IByteAt(i)) < 0 && i < this.ILength() - 1) //rest and unit
-								{
-									addend.setI(sumByteAt(addend.getI(), i + 1, -1));
-									addend.setI(sumByteAt(addend.getI(), i, +10));
-								}
-								b[i] = add(addend.IByteAt(i), invert(this.IByteAt(i)));
-								c1=m;
-							}
-
-							i--;
-						}
-						C = new BN(charToString(c1).concat(byteToString(modulo(b))));
-					}
 				}
-				else //case with d string
+				else
 				{
-					char c1 = p;
-					boolean Iequals=false;
-
-					//integer
-					if (addend.ILength() < this.ILength()) //case A<B
-					{
-						b = new byte[this.ILength()];
-						for (int i = 0, n = i + 1; i < addend.ILength(); i++)
-						{
-							if (Byte.compare(addend.IByteAt(i), this.IByteAt(i)) > 0 && i < addend.ILength()) //rest and unit
-							{
-								int z=i;
-								while (z < this.ILength())
-								{
-									if (this.IByteAt(z) <= 0 && z < this.length() - 1)
-									{
-										this.setI(sumByteAt(this.getI(), z + n, -1));
-										this.setI(sumByteAt(this.getI(), z, +10));
-									}
-									z++;
-								}
-							}
-							b[i] = add(this.IByteAt(i), invert(addend.IByteAt(i)));
-						}
-						for (int i = addend.ILength(); i < this.ILength(); i++)
-						{
-							b[i] = this.IByteAt(i);
-						}
-					}
-					else if (addend.ILength() > this.ILength()) //case A>B
-					{
-						b = new byte[addend.ILength()];
-						for (int i = 0, n = i + 1; i < this.ILength(); i++)
-						{
-							if (Byte.compare(addend.IByteAt(i), this.IByteAt(i)) < 0 && i < this.ILength()) //rest and unit
-							{
-								int z=i;
-								while (z < addend.ILength())
-								{
-									if (addend.IByteAt(z) <= 0 && z < addend.length() - 1)
-									{
-										addend.setI(sumByteAt(addend.getI(), z + n, -1));
-										addend.setI(sumByteAt(addend.getI(), z, +10));
-									}
-									z++;
-								}
-							}
-							b[i] = add(addend.IByteAt(i), invert(this.IByteAt(i)));
-						}
-						for (int i = this.ILength(); i < addend.ILength(); i++)
-						{
-							b[i] = addend.IByteAt(i);
-						}
-							c1 = m;//provvissorio e non necessario, forse
-					}
-					else //case A=B
-					{
-						int i = this.ILength() - 1;
-						b = new byte[addend.ILength()];
-						while (i >= 0)
-						{
-							if (Byte.compare(addend.IByteAt(i), this.IByteAt(i)) < 0)
-							{
-								if (Byte.compare(addend.IByteAt(i), this.IByteAt(i)) > 0 && i < this.ILength() - 1) //rest and unit
-								{
-									this.setI(sumByteAt(this.getI(), i + 1, -1));
-									this.setI(sumByteAt(this.getI(), i, +10));
-								}
-								b[i] = add(this.IByteAt(i), invert(addend.IByteAt(i)));
-								Iequals=true;
-							}
-							else if (Byte.compare(addend.IByteAt(i), this.IByteAt(i)) > 0)
-							{
-								if (Byte.compare(addend.IByteAt(i), this.IByteAt(i)) < 0 && i < this.ILength() - 1) //rest and unit
-								{
-									addend.setI(sumByteAt(addend.getI(), i + 1, -1));
-									addend.setI(sumByteAt(addend.getI(), i, +10));
-								}
-								b[i] = add(addend.IByteAt(i), invert(this.IByteAt(i)));
-								Iequals=false;
-								c1=m;
-							}
-							else
-							{
-								Iequals=true;
-							}
-
-							i--;
-						}
-					}
-
 					//decimal
-					//addend.setD(invert(addend.getD()));
-					//this.setD(invert(this.getD()));
 					if (addend.DLength() < this.DLength()) //case A<B
 					{
 						b1 = new byte[this.DLength()];
 
-						for (int i = this.DLength()-1; i >= addend.DLength(); i--)
-						{
-							b1[i] = this.DByteAt(i);
-						}
+							for (int i = this.DLength() - 1; i >= addend.DLength(); i--)
+							{
+								b1[i] = this.DByteAt(i);
+							}
 
-						for (int i = addend.DLength()-1; i >= 0; i--)
+						for (int i = addend.DLength() - 1; i >= 0; i--)
 						{
 							if (Byte.compare(addend.DByteAt(i), this.DByteAt(i)) > 0 && i >= 0) //rest and unit
 							{
-								int z=i;
+								int z = i;
 								while (z > 0)
 								{
 									if (this.DByteAt(z) <= 0 && z > 0)
 									{
-										this.setD(sumByteAt(this.getD(), z -1, -1));
+										this.setD(sumByteAt(this.getD(), z - 1, -1));
 										this.setD(sumByteAt(this.getD(), z, +10));
 									}
 									z--;
 								}
 							}/*ammaccabanane*/
-							b1[i] = (byte) Math.abs(add(this.DByteAt(i), invert(addend.DByteAt(i))));
+							b1 = sumByteAt(b1, i ,(byte) Math.abs(add(this.DByteAt(i), invert(addend.DByteAt(i)))));
 						}
-
-						if (Iequals)
-							c1 = m;
 					}
 					else if (addend.DLength() > this.DLength()) //case A>B
 					{
 						b1 = new byte[addend.DLength()];
 
-						for (int i = addend.DLength()-1; i >= this.DLength(); i--)
-						{
-							b1[i] = addend.DByteAt(i);
-						}
+							for (int i = addend.DLength() - 1; i >= this.DLength(); i--)
+							{
+								b1[i] = addend.DByteAt(i);
+							}
 
-						for (int i = this.DLength()-1; i >= 0; i--)
+						for (int i = this.DLength() - 1; i >= 0; i--)
 						{
 							if (Byte.compare(addend.DByteAt(i), this.DByteAt(i)) < 0 && i >= 0) //rest and unit
 							{
-								int z=i;
+								int z = i;
 								while (z > 0)
 								{
 									if (addend.DByteAt(z) <= 0 && z > 0)
@@ -1024,8 +823,11 @@ public class BN {
 									z--;
 								}
 							}
-							b1[i] = (byte) Math.abs(add(addend.DByteAt(i), invert(this.DByteAt(i))));
+							b1 = sumByteAt(b1,i,(byte) Math.abs(add(addend.DByteAt(i), invert(this.DByteAt(i)))));
+
 						}
+						if (Iequals)
+							c1 = m;
 					}/*ammmaccabaae*/
 					else //case A=B
 					{
@@ -1050,7 +852,8 @@ public class BN {
 									addend.setD(sumByteAt(addend.getD(), i, +10));
 								}
 								b1[i] = add(addend.DByteAt(i), invert(this.DByteAt(i)));
-								c1=m;
+								if (Iequals)
+									c1 = m;
 							}
 
 							i++;
@@ -1058,344 +861,49 @@ public class BN {
 					}
 
 
-					if(addend.DLength()==0 || this.DLength()==0)
+					if ((addend.DLength() == 0 || this.DLength() == 0) && !C.getAbs().equals("0"))
 					{
 						BN provv = new BN(byteToString(b));
 						b = provv.sum(new BN("-1")).getI();
-						b1[0] = add((byte) 10, invert(b1[0]));
+						b1 = (new BN(String.valueOf((long) Math.pow(10,b1.length)))).sum(new BN("-".concat(byteToString(invert(b1))))).getI();
+						System.arraycopy(invert(b1),1,b1,0,b1.length-1);//b1 = invert(b1);
 					}
 
-						/*if (!(b1.length==1 && b1[0]==0))//unit rest from D to I
-						{*/
-					if ((modulo(invert(b1)).length != b1.length) /*&& this.DLength()>=addend.DLength()*/)//check rest is necessary
+					if ((modulo(invert(b1)).length != b1.length))//check rest is necessary
 					{
 						b[0] += 1;
 						byte[] b2 = modulo(invert(b1));
 						byte[] b3 = new byte[b1.length];
 						b3[0] = 0;
-						for (int i = 1; i < b1.length; i++)
-						{
-							b3[i] = b2[i];
-						}
-						C = new BN(charToString(c1).concat(byteToString(modulo(b))).concat(",").concat(byteToString(b3)));
+						System.arraycopy(b2, 1, b3, 1, b1.length - 1);
+						C.setOriginal(charToString(c1).concat(byteToString(modulo(b))).concat(",").concat(byteToString(b3)));
+						C.reInitialize();
 					}
 					else
 					{
-						C = new BN(charToString(c1).concat(byteToString(modulo(b))).concat(",").concat(byteToString(modulo(invert(b1)))));
+						C.setOriginal(charToString(c1).concat(byteToString(modulo(b))).concat(",").concat(byteToString(modulo(invert(b1)))));
+						C.reInitialize();
 					}
-						/*}*/
 				}
 			}
 			else
 			{
-				if (addend.getd().isEmpty() && this.getd().isEmpty()) //case without d string
-				{
-					b1 = new byte[1];
-					if (addend.ILength() < this.ILength()) //case A<B
-					{
-						b = new byte[this.length()];
-						for (int i = 0, n = i + 1;  i < addend.length(); i++)
-						{
-							if (Byte.compare(addend.IByteAt(i), this.IByteAt(i)) > 0 && i < addend.ILength()) //rest and unit
-							{
-								int z=i;
-								while (z < this.ILength())
-								{
-									if (this.IByteAt(z) <= 0 && z < this.length() - 1)
-									{
-										this.setI(sumByteAt(this.getI(), z + n, -1));
-										this.setI(sumByteAt(this.getI(), z, +10));
-									}
-									z++;
-								}
-							}
-							b[i] = add(this.IByteAt(i), invert(addend.IByteAt(i)));
-						}
-						for (int i = addend.length(); i < this.length(); i++)
-						{
-							b[i] = this.IByteAt(i);
-						}
-						C = new BN(byteToString(modulo(b)));
-						C.setS(m);
-					}
-					else if (addend.ILength() > this.ILength()) //case A>B
-					{
-						b = new byte[addend.length()];
-						for (int i = 0, n = i + 1; i < this.length(); i++)
-						{
-							if (Byte.compare(addend.IByteAt(i), this.IByteAt(i)) < 0 && i <= this.ILength() - 1) //rest and unit
-							{
-								int z=i;
-								while (z < addend.ILength())
-								{
-									if (addend.IByteAt(z) <= 0 && z < addend.length() - 1)
-									{
-										addend.setI(sumByteAt(addend.getI(), z + n, -1));
-										addend.setI(sumByteAt(addend.getI(), z, +10));
-									}
-									z++;
-								}
-							}
-
-							b[i] = add(addend.IByteAt(i), invert(this.IByteAt(i)));
-						}
-						for (int i = this.length(); i < addend.length(); i++)
-						{
-							b[i] = addend.IByteAt(i);
-						}
-						C = new BN(byteToString(modulo(b)));
-					}
-					else //case A=B
-					{
-						char c1=p;
-						int i = this.ILength() - 1;
-						b = new byte[addend.length()];
-						while (i >= 0)
-						{
-							if (Byte.compare(addend.IByteAt(i), this.IByteAt(i)) < 0)
-							{
-								if (Byte.compare(addend.IByteAt(i), this.IByteAt(i)) > 0 && i < this.ILength() - 1) //rest and unit
-								{
-									this.setI(sumByteAt(this.getI(), i + 1, -1));
-									this.setI(sumByteAt(this.getI(), i, +10));
-								}
-								b[i] = add(this.IByteAt(i), invert(addend.IByteAt(i)));
-								c1=m;
-							}
-							else if (Byte.compare(addend.IByteAt(i), this.IByteAt(i)) > 0)
-							{
-								if (Byte.compare(addend.IByteAt(i), this.IByteAt(i)) < 0 && i < this.ILength() - 1) //rest and unit
-								{
-									addend.setI(sumByteAt(addend.getI(), i + 1, -1));
-									addend.setI(sumByteAt(addend.getI(), i, +10));
-								}
-								b[i] = add(addend.IByteAt(i), invert(this.IByteAt(i)));
-
-							}
-
-							i--;
-						}
-						C = new BN(charToString(c1).concat(byteToString(modulo(b))));
-					}
-				}
-				else //case with d string
-				{
-					char c1 = p;
-					boolean Iequals=false;
-
-					//integer
-					if (addend.ILength() < this.ILength()) //case A<B
-					{
-						b = new byte[this.ILength()];
-						for (int i = 0, n = i + 1; i < addend.ILength(); i++)
-						{
-							if (Byte.compare(addend.IByteAt(i), this.IByteAt(i)) > 0 && i < addend.ILength()) //rest and unit
-							{
-								int z=i;
-								while (z < this.ILength())
-								{
-									if (this.IByteAt(z) <= 0 && z < this.length() - 1)
-									{
-										this.setI(sumByteAt(this.getI(), z + n, -1));
-										this.setI(sumByteAt(this.getI(), z, +10));
-									}
-									z++;
-								}
-							}
-							b[i] = add(this.IByteAt(i), invert(addend.IByteAt(i)));
-						}
-						for (int i = addend.ILength(); i < this.ILength(); i++)
-						{
-							b[i] = this.IByteAt(i);
-						}
-						c1 = m;//provvissorio e non necessario, forse
-					}
-					else if (addend.ILength() > this.ILength()) //case A>B
-					{
-						b = new byte[addend.ILength()];
-						for (int i = 0, n = i + 1; i < this.ILength(); i++)
-						{
-							if (Byte.compare(addend.IByteAt(i), this.IByteAt(i)) < 0 && i < this.ILength()) //rest and unit
-							{
-								int z=i;
-								while (z < addend.ILength())
-								{
-									if (addend.IByteAt(z) <= 0 && z < addend.length() - 1)
-									{
-										addend.setI(sumByteAt(addend.getI(), z + n, -1));
-										addend.setI(sumByteAt(addend.getI(), z, +10));
-									}
-									z++;
-								}
-							}
-							b[i] = add(addend.IByteAt(i), invert(this.IByteAt(i)));
-						}
-						for (int i = this.ILength(); i < addend.ILength(); i++)
-						{
-							b[i] = addend.IByteAt(i);
-						}
-					}
-					else //case A=B
-					{
-						int i = this.ILength() - 1;
-						b = new byte[addend.ILength()];
-						while (i >= 0)
-						{
-							if (Byte.compare(addend.IByteAt(i), this.IByteAt(i)) < 0)
-							{
-								if (Byte.compare(addend.IByteAt(i), this.IByteAt(i)) > 0 && i < this.ILength() - 1) //rest and unit
-								{
-									this.setI(sumByteAt(this.getI(), i + 1, -1));
-									this.setI(sumByteAt(this.getI(), i, +10));
-								}
-								b[i] = add(this.IByteAt(i), invert(addend.IByteAt(i)));
-								Iequals=true;
-								c1=m;
-							}
-							else if (Byte.compare(addend.IByteAt(i), this.IByteAt(i)) > 0)
-							{
-								if (Byte.compare(addend.IByteAt(i), this.IByteAt(i)) < 0 && i < this.ILength() - 1) //rest and unit
-								{
-									addend.setI(sumByteAt(addend.getI(), i + 1, -1));
-									addend.setI(sumByteAt(addend.getI(), i, +10));
-								}
-								b[i] = add(addend.IByteAt(i), invert(this.IByteAt(i)));
-								Iequals=false;
-							}
-							else
-							{
-								Iequals=true;
-							}
-
-							i--;
-						}
-					}
-
-					//decimal
-					if (addend.DLength() < this.DLength()) //case A<B
-					{
-						b1 = new byte[this.DLength()];
-
-						for (int i = this.DLength()-1; i >= addend.DLength(); i--)
-						{
-							b1[i] = this.DByteAt(i);
-						}
-
-						for (int i = addend.DLength()-1; i >= 0; i--)
-						{
-							if (Byte.compare(addend.DByteAt(i), this.DByteAt(i)) > 0 && i >= 0) //rest and unit
-							{
-								int z=i;
-								while (z > 0)
-								{
-									if (this.DByteAt(z) <= 0 && z > 0)
-									{
-										this.setD(sumByteAt(this.getD(), z -1, -1));
-										this.setD(sumByteAt(this.getD(), z, +10));
-									}
-									z--;
-								}
-							}
-							b1[i] = (byte) Math.abs(add(this.DByteAt(i), invert(addend.DByteAt(i))));
-						}
-
-					}
-					else if (addend.DLength() > this.DLength()) //case A>B
-					{
-						b1 = new byte[addend.DLength()];
-
-						for (int i = addend.DLength()-1; i >= this.DLength(); i--)
-						{
-							b1[i] = addend.DByteAt(i);
-						}
-
-						for (int i = this.DLength()-1; i >= 0; i--)
-						{
-							if (Byte.compare(addend.DByteAt(i), this.DByteAt(i)) < 0 && i >= 0) //rest and unit
-							{
-								int z=i;
-								while (z > 0)
-								{
-									if (addend.DByteAt(z) <= 0 && z > 0)
-									{
-										addend.setD(sumByteAt(addend.getD(), z - 1, -1));
-										addend.setD(sumByteAt(addend.getD(), z, +10));
-									}
-									z--;
-								}
-							}
-							b1[i] = (byte) Math.abs(add(addend.DByteAt(i), invert(this.DByteAt(i))));
-						}
-						if (Iequals)
-							c1 = m;
-					}
-					else //case A=B
-					{
-						b1 = new byte[addend.DLength()];
-						int i = 0;
-						while (i < this.DLength())
-						{
-							if (Byte.compare(addend.DByteAt(i), this.DByteAt(i)) < 0)
-							{
-								if (Byte.compare(addend.DByteAt(i), this.DByteAt(i)) > 0 && i < this.DLength() - 1) //rest and unit
-								{
-									this.setD(sumByteAt(this.getD(), i + 1, -1));
-									this.setD(sumByteAt(this.getD(), i, +10));
-								}
-								b1[i] = add(this.DByteAt(i), invert(addend.DByteAt(i)));
-								c1=m;
-							}
-							else if (Byte.compare(addend.DByteAt(i), this.DByteAt(i)) > 0)
-							{
-								if (Byte.compare(addend.DByteAt(i), this.DByteAt(i)) < 0 && i < this.DLength() - 1) //rest and unit
-								{
-									addend.setD(sumByteAt(addend.getD(), i + 1, -1));
-									addend.setD(sumByteAt(addend.getD(), i, +10));
-								}
-								b1[i] = add(addend.DByteAt(i), invert(this.DByteAt(i)));
-							}
-
-							i++;
-						}
-					}
-
-
-					if(addend.DLength()==0 || this.DLength()==0)
-					{
-						BN provv = new BN(byteToString(b));
-						b = provv.sum(new BN("-1")).getI();
-						b1[0] = add((byte) 10, invert(b1[0]));
-					}
-
-
-					if ((modulo(invert(b1)).length != b1.length) )//check rest is necessary
-					{
-						b[0] += 1;
-						byte[] b2 = modulo(invert(b1));
-						byte[] b3 = new byte[b1.length];
-						b3[0] = 0;
-						for (int i = 1; i < b1.length; i++)
-						{
-							b3[i] = b2[i];
-						}
-						C = new BN(charToString(c1).concat(byteToString(modulo(b))).concat(",").concat(byteToString(b3)));
-					}
-					else
-					{
-						C = new BN(charToString(c1).concat(byteToString(modulo(b))).concat(",").concat(byteToString(modulo(invert(b1)))));
-					}
-
-				}
-				/*************************************************************************/
+				C = addend.sum(this);
+				//C.setS(invert(C.getS()));
 			}
 		}
 
 		//re-initialization members of sum
-		this.BNInitialize();
-		addend.BNInitialize();
+		this.reInitialize();
+		addend.reInitialize();
 
 		//return statement
 		return C;
+	}
+
+	public static String abs(BN bn)
+	{
+		return bn.getAbs();
 	}
 
 }

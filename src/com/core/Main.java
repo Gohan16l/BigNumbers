@@ -17,7 +17,7 @@ public class Main {
 	public static void main(String[] args) {
 	// write your code here
 
-		stampa("Run TEST Version 0.0.1.8.1 - BigNumbers library test");//-- KILLUA APPROVED
+		stampa("Run TEST Version 0.0.2.2 - BigNumbers library test");//-- KILLUA APPROVED
 
 		stampa("Primo numero:");
 		BN a = new BN(tastiera.nextLine());
@@ -31,7 +31,8 @@ public class Main {
 
 		System.out.print("risultato:");
 		System.out.print(c.getS());
-		System.out.println(c.getAbs());
+		System.out.println(BN.abs(c));
 		stampa(String.valueOf("cifre usate:"+c.length()));
+		stampa(String.valueOf("ID:"+c.getID()));
     }
 }
