@@ -12,12 +12,10 @@ public class Main {
 		System.out.println(object);
 	}
 
-
-
 	public static void main(String[] args) {
 	// write your code here
 
-		stampa("Run TEST Version 0.0.2.8 - BigNumbers library test");//-- KILLUA APPROVED
+		stampa("Run TEST Version 0.0.2.9 - BigNumbers library test");//-- KILLUA APPROVED
 
 		stampa("Primo numero:");
 		BN a = new BN(tastiera.nextLine());
@@ -29,10 +27,12 @@ public class Main {
 
 		BN c = a.sum(b);
 
+		BN d = new BN("0");
+
 		System.out.print("risultato:");
 		System.out.print(c.getS());
 		System.out.println(BN.abs(c));
 		stampa(String.valueOf("cifre usate:"+c.length()));
-		stampa(String.valueOf("ID:"+c.getID()));
+		stampa(String.valueOf("ID:"+d.getID()));
     }
 }

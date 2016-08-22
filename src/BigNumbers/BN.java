@@ -465,10 +465,10 @@ public class BN {
 				}
 
 				//reinitialize i
-				if(i.length()>1)
+				/*if(i.length()>1)
 					i = generateCharacterException(i);
 				if (i.equals(""))
-					throw new BNIntegerException();
+					throw new BNIntegerException();*/
 			}
 
 			//exception if original contains character not valid
@@ -477,11 +477,11 @@ public class BN {
 				System.out.println(e.getError());
 				System.exit(1002);
 			}
-			catch (BNIntegerException e)
+			/*catch (BNIntegerException e)
 			{
 				System.out.println(e.getError());
 				System.exit(1001);
-			}
+			}*/
 
 
 			//set I and D
@@ -495,7 +495,10 @@ public class BN {
 		}
 
 		//set abs
-		setAbs(geti().concat(",").concat(getd()));
+		if (d.length()>0)
+			setAbs(geti().concat(",").concat(getd()))
+		else
+			setAbs(geti());
 	}
 
 	//re-initialize BN
@@ -903,12 +906,12 @@ public class BN {
 										//i++;
 								//}
 							}
-							else if (Byte.compare(addend.DByteAt(i), this.DByteAt(i)) > 0)
+							else if (Byte.compare(addend.DByteAt(i), this.DByteAt(i)) > 0)//GUARDA QUI!!!!!!!!!!!!!!!!
 							{
 								//while (i < this.DLength())
 								//{
-									b1 = (new BN(addend.getd()).sum(new BN(this.getd()))).getI();
-									counter =- 2;
+
+									b1 = new BN(addend.getd()).sum(new BN("-".concat(this.getd()))).getI();
 									if (Iequals)
 										c1 = m;
 									break;
