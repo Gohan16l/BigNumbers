@@ -134,49 +134,77 @@ public class BN {
 //methods
 
 	//create an Exception for integer's array
-	private void generateIntegerException () throws BNIntegerException
+	private String generateCharacterException (String input) throws BNCharacterException, BNIntegerException
 	{
-		switch (original.charAt(0))
+		String str = "";
+		boolean exit=false;
+		int i = 0;
+
+		while (!exit && i < input.length())
 		{
-			case '0':
-				setAbs(original);
-				break;
-			case '1':
-				setAbs(original);
-				break;
-			case '2':
-				setAbs(original);
-				break;
-			case '3':
-				setAbs(original);
-				break;
-			case '4':
-				setAbs(original);
-				break;
-			case '5':
-				setAbs(original);
-				break;
-			case '6':
-				setAbs(original);
-				break;
-			case '7':
-				setAbs(original);
-				break;
-			case '8':
-				setAbs(original);
-				break;
-			case '9':
-				setAbs(original);
-				break;
-			case p:
-				setAbs(original.substring(1));
-				break;
-			case m:
-				setAbs(original.substring(1));
-				break;
-			default:
-				throw new BNIntegerException();
+			switch (input.charAt(i))
+			{
+				case '0':
+					if (i == input.length()-1)
+						str = input.substring(i);
+					i++;
+					break;
+				case '1':
+					str = input.substring(i);
+					exit=true;
+					break;
+				case '2':
+					str = input.substring(i);
+					exit=true;
+					break;
+				case '3':
+					str = input.substring(i);
+					exit=true;
+					break;
+				case '4':
+					str = input.substring(i);
+					exit=true;
+					break;
+				case '5':
+					str = input.substring(i);
+					exit=true;
+					break;
+				case '6':
+					str = input.substring(i);
+					exit=true;
+					break;
+				case '7':
+					str = input.substring(i);
+					exit=true;
+					break;
+				case '8':
+					str = input.substring(i);
+					exit=true;
+					break;
+				case '9':
+					str = input.substring(i);
+					exit=true;
+					break;
+				case p:
+					i++;
+					break;
+				case m:
+					i++;
+					break;
+				case comma:
+					i++;
+					break;
+				case period:
+					i++;
+					break;
+				default:
+					throw new BNCharacterException();
+			}
 		}
+		if(str.equals(""))
+			throw new BNIntegerException();
+
+		return str;
 	}
 
 	//check original isn't null
@@ -220,11 +248,11 @@ public class BN {
 	}
 
 	//set a value in the array's index in parameters
-	private static byte[] setByteAt (byte[] input, int index, int value)
+	private static byte[] setByteAt (byte[] byteArray, int index, int value)
 	{
-		input[index] = (byte) value;
+		byteArray[index] = (byte) value;
 
-		return input;
+		return byteArray;
 	}
 
 	//return a string with only a digit(the character input)
@@ -283,10 +311,15 @@ public class BN {
 				throw new BNInputException();
 			}
 
-			//check the first character
+			//check the first character and initialize abs
 			try
 			{
-				generateIntegerException();
+				generateCharacterException(original);
+			}
+			catch (BNCharacterException e)
+			{
+				System.out.println(e.getError());
+				System.exit(1002);
 			}
 			catch (BNIntegerException e)
 			{
@@ -300,7 +333,7 @@ public class BN {
 			if (original.charAt(0) == p || original.charAt(0) == m)
 			{
 				setS(original.charAt(0));
-				n = 1;
+				n++;
 			}
 			else
 			{
@@ -430,6 +463,12 @@ public class BN {
 							throw new BNCharacterException();
 					}
 				}
+
+				//reinitialize i
+				if(i.length()>1)
+					i = generateCharacterException(i);
+				if (i.equals(""))
+					throw new BNIntegerException();
 			}
 
 			//exception if original contains character not valid
@@ -438,6 +477,12 @@ public class BN {
 				System.out.println(e.getError());
 				System.exit(1002);
 			}
+			catch (BNIntegerException e)
+			{
+				System.out.println(e.getError());
+				System.exit(1001);
+			}
+
 
 			//set I and D
 			setI(stringToByte(geti()));
@@ -448,6 +493,9 @@ public class BN {
 			System.out.println(e.getError());
 			System.exit(1003);
 		}
+
+		//set abs
+		setAbs(geti().concat(",").concat(getd()));
 	}
 
 	//re-initialize BN
@@ -598,7 +646,7 @@ public class BN {
 			{
 				b1 = new byte[1];
 			}
-			else
+			else//DA RIGUARDARE!!!! -- TO OPTIMIZE IT!!!!
 			{
 				//decimal
 				if (addend.DLength() > this.DLength()) //case A>B
@@ -644,16 +692,19 @@ public class BN {
 					byte[] b3 = new byte[b1.length];
 					b3[0] = 0;
 					System.arraycopy(b2, 1, b3, 1, b1.length - 1);
-					return new BN(charToString(this.getS()).concat(byteToString(modulo(b))).concat(",").concat(byteToString(b3)));
+					C = new BN(charToString(this.getS()).concat(byteToString(modulo(b))).concat(",").concat(byteToString(b3)));
+					return C;
 				}
 				else
 				{
-					return new BN(charToString(this.getS()).concat(byteToString(modulo(b))).concat(",").concat(byteToString(modulo(invert(b1)))));
+					C = new BN(charToString(this.getS()).concat(byteToString(modulo(b))).concat(",").concat(byteToString(modulo(invert(b1)))));
+					return C;
 				}
 			}
 			else
 			{
-				return new BN(charToString(this.getS()).concat(byteToString(modulo(b))));
+				C = new BN(charToString(this.getS()).concat(byteToString(modulo(b))));
+				return C;
 			}
 		}
 		else//case with different S
@@ -672,15 +723,16 @@ public class BN {
 						if (Byte.compare(addend.IByteAt(i), this.IByteAt(i)) > 0 && i < addend.ILength()) //rest and unit
 						{
 							int z = i;
-							while (z < this.ILength())
+							while (z < this.ILength() -1 )
 							{
-								if (this.IByteAt(z) <= 0 && z < this.length() - 1)
-								{
+								//if (this.IByteAt(z) <= 0 && z < this.ILength() - 1)
+								//{
 									this.setI(sumByteAt(this.getI(), z + n, -1));
 									this.setI(sumByteAt(this.getI(), z, +10));
-								}
+								//}
 								z++;
-							}
+							 }
+
 						}
 						b[i] = add(this.IByteAt(i), invert(addend.IByteAt(i)));
 					}
@@ -698,13 +750,13 @@ public class BN {
 						if (Byte.compare(addend.IByteAt(i), this.IByteAt(i)) < 0 && i <= this.ILength() - 1) //rest and unit
 						{
 							int z = i;
-							while (z < addend.ILength())
+							while (z < addend.ILength() -1 )
 							{
-								if (addend.IByteAt(z) <= 0 && z < addend.ILength() - 1)
-								{
+								//if (addend.IByteAt(z) <= 0 && z < addend.ILength() - 1)
+								//{
 									addend.setI(sumByteAt(addend.getI(), z + n, -1));
 									addend.setI(sumByteAt(addend.getI(), z, +10));
-								}
+								//}
 								z++;
 							}
 						}
@@ -713,7 +765,7 @@ public class BN {
 					}
 					for (int i = this.ILength(); i < addend.ILength(); i++)
 					{
-						b[i] = addend.IByteAt(i);
+ 						b[i] = addend.IByteAt(i);
 					}
 					C = new BN(byteToString(modulo(b)));
 					C.setS(m);
@@ -837,23 +889,30 @@ public class BN {
 						{
 							if (Byte.compare(addend.DByteAt(i), this.DByteAt(i)) < 0)
 							{
-								if (Byte.compare(addend.DByteAt(i), this.DByteAt(i)) > 0 && i < this.DLength() - 1) //rest and unit
-								{
-									this.setD(sumByteAt(this.getD(), i + 1, -1));
-									this.setD(sumByteAt(this.getD(), i, +10));
-								}
-								b1[i] = add(this.DByteAt(i), invert(addend.DByteAt(i)));
+								//while (i < this.DLength())
+								//{
+
+								BN X = new BN(String.valueOf((long) Math.pow(10, addend.DLength())));
+								BN Y = new BN(addend.getd());
+								BN Z = new BN("-".concat((this.getd())));
+								counter =- 3;
+
+								b1 = ((X.sum(Y)).sum(Z)).getI();
+								b = new BN(byteToString(b)).sum(new BN("-1")).getI();
+								break;
+										//i++;
+								//}
 							}
 							else if (Byte.compare(addend.DByteAt(i), this.DByteAt(i)) > 0)
 							{
-								if (Byte.compare(addend.DByteAt(i), this.DByteAt(i)) < 0 && i < this.DLength() - 1) //rest and unit
-								{
-									addend.setD(sumByteAt(addend.getD(), i + 1, -1));
-									addend.setD(sumByteAt(addend.getD(), i, +10));
-								}
-								b1[i] = add(addend.DByteAt(i), invert(this.DByteAt(i)));
-								if (Iequals)
-									c1 = m;
+								//while (i < this.DLength())
+								//{
+									b1 = (new BN(addend.getd()).sum(new BN(this.getd()))).getI();
+									counter =- 2;
+									if (Iequals)
+										c1 = m;
+									break;
+								//}
 							}
 
 							i++;
@@ -861,11 +920,13 @@ public class BN {
 					}
 
 
-					if ((addend.DLength() == 0 || this.DLength() == 0) && !C.getAbs().equals("0"))
+					//union between decimal part and integer part for algebraic sum
+					if ((addend.DLength() == 0 ^ this.DLength() == 0) && !C.getAbs().equals("0"))
 					{
 						BN provv = new BN(byteToString(b));
 						b = provv.sum(new BN("-1")).getI();
 						b1 = (new BN(String.valueOf((long) Math.pow(10,b1.length)))).sum(new BN("-".concat(byteToString(invert(b1))))).getI();
+						counter =- 4;
 						System.arraycopy(invert(b1),1,b1,0,b1.length-1);//b1 = invert(b1);
 					}
 
@@ -877,13 +938,12 @@ public class BN {
 						b3[0] = 0;
 						System.arraycopy(b2, 1, b3, 1, b1.length - 1);
 						C.setOriginal(charToString(c1).concat(byteToString(modulo(b))).concat(",").concat(byteToString(b3)));
-						C.reInitialize();
 					}
 					else
 					{
 						C.setOriginal(charToString(c1).concat(byteToString(modulo(b))).concat(",").concat(byteToString(modulo(invert(b1)))));
-						C.reInitialize();
 					}
+					C.reInitialize();
 				}
 			}
 			else
