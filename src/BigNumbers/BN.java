@@ -496,7 +496,7 @@ public class BN {
 
 		//set abs
 		if (d.length()>0)
-			setAbs(geti().concat(",").concat(getd()))
+			setAbs(geti().concat(",").concat(getd()));
 		else
 			setAbs(geti());
 	}
