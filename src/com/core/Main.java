@@ -15,7 +15,7 @@ public class Main {
 	public static void main(String[] args) {
 	// write your code here
 
-		stampa("Run TEST Version 0.0.2.9 - BigNumbers library test");//-- KILLUA APPROVED
+		stampa("Run TEST Version 0.0.2.11 - BigNumbers library test");//-- KILLUA APPROVED
 
 		stampa("Primo numero:");
 		BN a = new BN(tastiera.nextLine());

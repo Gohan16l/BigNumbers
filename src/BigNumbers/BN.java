@@ -789,7 +789,7 @@ public class BN {
 									b = sumByteAt(b, i, 10);
 								}
 								b = sumByteAt(b, i, add(this.IByteAt(i), invert(addend.IByteAt(i))));
-								Iequals = true;
+								Iequals = false;
 
 								i--;
 							}
@@ -820,11 +820,7 @@ public class BN {
 					C = new BN(charToString(c1).concat(byteToString(modulo(b))));
 				}
 
-				if (addend.getd().isEmpty() && this.getd().isEmpty())
-				{
-					b1 = new byte[1];
-				}
-				else
+				if (!addend.getd().isEmpty() || !this.getd().isEmpty())
 				{
 					//decimal
 					if (addend.DLength() < this.DLength()) //case A<B
@@ -894,27 +890,60 @@ public class BN {
 							{
 								//while (i < this.DLength())
 								//{
+								if (add(addend.DByteAt(i),invert(this.DByteAt(i))) < 0 && !Iequals)
+								{
+									BN X = new BN(String.valueOf((long) Math.pow(10, addend.DLength())));
+									BN Y = new BN(addend.getd());
+									BN Z = new BN("-".concat((this.getd())));
+									counter = -3;
 
-								BN X = new BN(String.valueOf((long) Math.pow(10, addend.DLength())));
-								BN Y = new BN(addend.getd());
-								BN Z = new BN("-".concat((this.getd())));
-								counter =- 3;
-
-								b1 = ((X.sum(Y)).sum(Z)).getI();
-								b = new BN(byteToString(b)).sum(new BN("-1")).getI();
-								break;
-										//i++;
+									try
+									{
+										b1 = invert(new BN(generateCharacterException(byteToString((X.sum(Y)).sum(Z).getI()))).getI());
+									}
+									catch (BNCharacterException | BNIntegerException e)
+									{
+										e.printStackTrace();
+										System.exit(1010);
+									}
+									b = new BN(byteToString(b)).sum(new BN("-1")).getI();
+									break;
+								}		//i++;
 								//}
+								else
+								{
+									b1 = sumByteAt(b1, i, add(this.DByteAt(i),invert(addend.DByteAt(i))));
+								}
 							}
 							else if (Byte.compare(addend.DByteAt(i), this.DByteAt(i)) > 0)//GUARDA QUI!!!!!!!!!!!!!!!!
 							{
 								//while (i < this.DLength())
 								//{
+									if(add(this.DByteAt(i),invert(addend.DByteAt(i))) < 0 && !Iequals)
+									{
+										BN X = new BN(String.valueOf((long) Math.pow(10, addend.DLength())));
+										BN Y = new BN(this.getd());
+										BN Z = new BN("-".concat((addend.getd())));
+										counter = -3;
 
-									b1 = new BN(addend.getd()).sum(new BN("-".concat(this.getd()))).getI();
+										try
+										{
+											b1 = invert(new BN(generateCharacterException(byteToString((X.sum(Y)).sum(Z).getI()))).getI());
+										}
+										catch (BNCharacterException | BNIntegerException e)
+										{
+											e.printStackTrace();
+											System.exit(1010);
+										}
+										b = new BN(byteToString(b)).sum(new BN("-1")).getI();
+										break;
+									}
+									else
+									{
+										b1 = sumByteAt(b1, i, add(addend.DByteAt(i),invert(this.DByteAt(i))));
+									}
 									if (Iequals)
 										c1 = m;
-									break;
 								//}
 							}
 
@@ -933,19 +962,8 @@ public class BN {
 						System.arraycopy(invert(b1),1,b1,0,b1.length-1);//b1 = invert(b1);
 					}
 
-					if ((modulo(invert(b1)).length != b1.length))//check rest is necessary
-					{
-						b[0] += 1;
-						byte[] b2 = modulo(invert(b1));
-						byte[] b3 = new byte[b1.length];
-						b3[0] = 0;
-						System.arraycopy(b2, 1, b3, 1, b1.length - 1);
-						C.setOriginal(charToString(c1).concat(byteToString(modulo(b))).concat(",").concat(byteToString(b3)));
-					}
-					else
-					{
-						C.setOriginal(charToString(c1).concat(byteToString(modulo(b))).concat(",").concat(byteToString(modulo(invert(b1)))));
-					}
+
+					C.setOriginal(charToString(c1).concat(byteToString(modulo(b))).concat(",").concat(byteToString(modulo(invert(b1)))));
 					C.reInitialize();
 				}
 			}
