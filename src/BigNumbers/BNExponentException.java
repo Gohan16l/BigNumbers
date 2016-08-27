@@ -1,13 +1,13 @@
 package BigNumbers;
 
 /**
- * Created by Andrea (Black) Costa on 17/08/16.
+ * Created by Andrea (Black) Costa on 26/08/16.
  * It belong to BigNumber
  */
 
-class BNInputException extends Exception {
+class BNExponentException extends Exception {
 //internal variables
-	private final String error="Input string must not null";
+	private final String error="Exponent must not negative";
 
 //constructors
 

@@ -43,6 +43,18 @@ public class BN {
 		BNInitialize();
 	}
 
+	public BN (BN a)
+	{
+		//set original string
+		setOriginal(a.getOriginal());
+
+		counter();
+
+		//set id
+		setID(BN.getCounter()-1);
+
+		this.reInitialize();
+	}
 
 //manipulators
 	public String getOriginal ()
@@ -598,6 +610,32 @@ public class BN {
 		return r;
 	}
 
+	//this method result a ~potenza di dieci~
+	public static BN tenValue (long index)//rivedere nome metodo con la traduzione di "ordine di grandezza"
+	{
+		BN E = new BN("10");
+		String e = E.geti();
+		BN A;
+
+		if (index < 2)
+		{
+			A = new BN(String.valueOf(Math.pow(10, index)));
+		}
+		else
+		{
+			for (long i = 0; i < index; i++)
+			{
+				e = e.concat("0");
+			}
+
+			A = new BN(e);
+		}
+		counter -= 2;
+
+		return A;
+
+	}
+
 	//this is a method to sum two BN object
 	public BN sum (BN addend)
 	{
@@ -693,8 +731,8 @@ public class BN {
 					b[0] += 1;
 					byte[] b2 = modulo(invert(b1));
 					byte[] b3 = new byte[b1.length];
-					b3[0] = 0;
-					System.arraycopy(b2, 1, b3, 1, b1.length - 1);
+					System.arraycopy(b2, 0, b3, 0, b1.length);
+					//b3[0] %= 10;
 					C = new BN(charToString(this.getS()).concat(byteToString(modulo(b))).concat(",").concat(byteToString(b3)));
 					return C;
 				}
@@ -892,7 +930,7 @@ public class BN {
 								//{
 								if (add(addend.DByteAt(i),invert(this.DByteAt(i))) < 0 && !Iequals)
 								{
-									BN X = new BN(String.valueOf((long) Math.pow(10, addend.DLength())));
+									BN X = tenValue(addend.DLength());
 									BN Y = new BN(addend.getd());
 									BN Z = new BN("-".concat((this.getd())));
 									counter = -3;
@@ -921,7 +959,7 @@ public class BN {
 								//{
 									if(add(this.DByteAt(i),invert(addend.DByteAt(i))) < 0 && !Iequals)
 									{
-										BN X = new BN(String.valueOf((long) Math.pow(10, addend.DLength())));
+										BN X = tenValue(addend.DLength());
 										BN Y = new BN(this.getd());
 										BN Z = new BN("-".concat((addend.getd())));
 										counter = -3;
@@ -957,8 +995,8 @@ public class BN {
 					{
 						BN provv = new BN(byteToString(b));
 						b = provv.sum(new BN("-1")).getI();
-						b1 = (new BN(String.valueOf((long) Math.pow(10,b1.length)))).sum(new BN("-".concat(byteToString(invert(b1))))).getI();
-						counter =- 4;
+						b1 = (tenValue(b1.length).sum(new BN("-".concat(byteToString(invert(b1)))))).getI();
+						counter -= 4;
 						System.arraycopy(invert(b1),1,b1,0,b1.length-1);//b1 = invert(b1);
 					}
 
@@ -982,9 +1020,65 @@ public class BN {
 		return C;
 	}
 
+	//return the ~differenza~ between two BN object
+	public BN differenza (BN sottraendo)//da tradurre!!!
+	{
+		BN R;
+
+		counter -= 1;
+
+		sottraendo.setS(invert(sottraendo.getS()));
+
+		R = this.sum(sottraendo);
+
+		return R;
+	}
+
+	//return the ~moltiplicazione~ between two BN object
+	public BN moltiplicazione (BN fattore)//da tradurre!!! PROVVISORIO!!
+	{
+		BN R = new BN();
+
+
+		return R;
+	}
+
 	public static String abs(BN bn)
 	{
 		return bn.getAbs();
 	}
 
+	public static BN pow (BN base, long exponent) throws BNExponentException //PROVVISORIO!!!
+	{
+		BN A;
+		BN B;
+
+		if (exponent < 2)
+		{
+			if (exponent < 0)
+			{
+				throw new BNExponentException();
+			}
+			else if (exponent < 1)
+			{
+				B = new BN("1");
+			}
+			else
+			{
+				B = base;
+			}
+		}
+		else
+		{
+			B = base.moltiplicazione(base);
+			for (long i = 1; i < exponent; i++)
+			{
+				B = B.moltiplicazione(base);
+			}
+		}
+
+		A = B;
+
+		return A;
+	}
 }

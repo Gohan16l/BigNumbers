@@ -15,24 +15,35 @@ public class Main {
 	public static void main(String[] args) {
 	// write your code here
 
-		stampa("Run TEST Version 0.0.2.11 - BigNumbers library test");//-- KILLUA APPROVED
+		stampa("Run TEST Version 0.0.3.1 - BigNumbers library test");//-- KILLUA APPROVED
 
-		stampa("Primo numero:");
+		stampa("First number:");
 		BN a = new BN(tastiera.nextLine());
-		stampa("Secondo numero:");
+		stampa("Second number:");
 		BN b = new BN(tastiera.nextLine());
 
+
+		BN c;
 		//System.out.print(a.getS());
 		//System.out.println(a.getOriginal());
 
-		BN c = a.sum(b);
+		stampa("select operation (+ - x ÷) :");
+		switch (tastiera.next())
+		{
+			case "+" :c = a.sum(b); break;
+			case "-": c = new BN(a.differenza(b)); break;
+			default: stampa("Character not valid or work in progress"); c = new BN(); break;
+		}
+
+
+
 
 		BN d = new BN("0");
 
-		System.out.print("risultato:");
+		System.out.print("result: \n");
 		System.out.print(c.getS());
 		System.out.println(BN.abs(c));
 		stampa(String.valueOf("cifre usate:"+c.length()));
-		stampa(String.valueOf("ID:"+d.getID()));
+		stampa(String.valueOf("ID: "+d.getID()));
     }
 }
