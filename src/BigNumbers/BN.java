@@ -610,14 +610,14 @@ public class BN {
 		return r;
 	}
 
-	//this method result a ~potenza di dieci~
-	public static BN tenValue (long index)//rivedere nome metodo con la traduzione di "ordine di grandezza"
+	//this method result a order of size
+	public static BN orderOfSize (long index)//rivedere nome metodo con la traduzione di "ordine di grandezza"
 	{
 		BN E = new BN("10");
 		String e = E.geti();
 		BN A;
 
-		if (index < 2)
+		if (index <= 2)
 		{
 			A = new BN(String.valueOf(Math.pow(10, index)));
 		}
@@ -752,6 +752,7 @@ public class BN {
 		{
 			char c1 = p;
 			boolean Iequals = false;
+			boolean Pmajor = true;
 
 			if (addend.getS() == m)//case S is -
 			{
@@ -782,6 +783,8 @@ public class BN {
 						b[i] = this.IByteAt(i);
 					}
 					C = new BN(byteToString(modulo(b)));
+
+					Pmajor=false;
 				}
 				else if (addend.ILength() > this.ILength()) //case A>B
 				{
@@ -791,7 +794,7 @@ public class BN {
 						if (Byte.compare(addend.IByteAt(i), this.IByteAt(i)) < 0 && i <= this.ILength() - 1) //rest and unit
 						{
 							int z = i;
-							while (z < addend.ILength() -1 )
+							while (z < addend.ILength() - 1)
 							{
 								//if (addend.IByteAt(z) <= 0 && z < addend.ILength() - 1)
 								//{
@@ -806,10 +809,13 @@ public class BN {
 					}
 					for (int i = this.ILength(); i < addend.ILength(); i++)
 					{
- 						b[i] = addend.IByteAt(i);
+						b[i] = addend.IByteAt(i);
 					}
 					C = new BN(byteToString(modulo(b)));
-					C.setS(m);
+					c1 = m;
+					C.setS(c1);
+
+					Pmajor=true;
 				}
 				else //case A=B
 				{
@@ -828,6 +834,7 @@ public class BN {
 								}
 								b = sumByteAt(b, i, add(this.IByteAt(i), invert(addend.IByteAt(i))));
 								Iequals = false;
+								Pmajor=true;
 
 								i--;
 							}
@@ -843,6 +850,7 @@ public class BN {
 								}
 								b = sumByteAt(b, i, (add(addend.IByteAt(i), invert(this.IByteAt(i)))));
 								Iequals = false;
+								Pmajor=false;
 								c1 = m;
 
 								i--;
@@ -851,6 +859,7 @@ public class BN {
 						else
 						{
 							Iequals = true;
+							Pmajor=false;
 						}
 
 						i--;
@@ -928,9 +937,9 @@ public class BN {
 							{
 								//while (i < this.DLength())
 								//{
-								if (add(addend.DByteAt(i),invert(this.DByteAt(i))) < 0 && !Iequals)
+								if (add(addend.DByteAt(i),invert(this.DByteAt(i))) < 0 && (!Iequals && !Pmajor))
 								{
-									BN X = tenValue(addend.DLength());
+									BN X = orderOfSize(addend.DLength());
 									BN Y = new BN(addend.getd());
 									BN Z = new BN("-".concat((this.getd())));
 									counter = -3;
@@ -957,9 +966,9 @@ public class BN {
 							{
 								//while (i < this.DLength())
 								//{
-									if(add(this.DByteAt(i),invert(addend.DByteAt(i))) < 0 && !Iequals)
+									if(add(this.DByteAt(i),invert(addend.DByteAt(i))) < 0 && (!Iequals && !Pmajor))
 									{
-										BN X = tenValue(addend.DLength());
+										BN X = orderOfSize(addend.DLength());
 										BN Y = new BN(this.getd());
 										BN Z = new BN("-".concat((addend.getd())));
 										counter = -3;
@@ -995,7 +1004,7 @@ public class BN {
 					{
 						BN provv = new BN(byteToString(b));
 						b = provv.sum(new BN("-1")).getI();
-						b1 = (tenValue(b1.length).sum(new BN("-".concat(byteToString(invert(b1)))))).getI();
+						b1 = (orderOfSize(b1.length).sum(new BN("-".concat(byteToString(invert(b1)))))).getI();
 						counter -= 4;
 						System.arraycopy(invert(b1),1,b1,0,b1.length-1);//b1 = invert(b1);
 					}
@@ -1020,22 +1029,22 @@ public class BN {
 		return C;
 	}
 
-	//return the ~differenza~ between two BN object
-	public BN differenza (BN sottraendo)//da tradurre!!!
+	//return the difference between two BN object
+	public BN difference (BN detract)
 	{
 		BN R;
 
 		counter -= 1;
 
-		sottraendo.setS(invert(sottraendo.getS()));
+		detract.setS(invert(detract.getS()));
 
-		R = this.sum(sottraendo);
+		R = this.sum(detract);
 
 		return R;
 	}
 
-	//return the ~moltiplicazione~ between two BN object
-	public BN moltiplicazione (BN fattore)//da tradurre!!! PROVVISORIO!!
+	//return the ~multiplication~ between two BN object
+	public BN multiplication (BN factor)//PROVVISORIO!!
 	{
 		BN R = new BN();
 
@@ -1070,10 +1079,10 @@ public class BN {
 		}
 		else
 		{
-			B = base.moltiplicazione(base);
+			B = base.multiplication(base);
 			for (long i = 1; i < exponent; i++)
 			{
-				B = B.moltiplicazione(base);
+				B = B.multiplication(base);
 			}
 		}
 

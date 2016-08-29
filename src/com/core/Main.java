@@ -4,10 +4,10 @@ import BigNumbers.BN;
 import java.util.Scanner;
 
 public class Main {
-	static Scanner tastiera = new Scanner(System.in);
+	private static Scanner keyboard = new Scanner(System.in);
 
 
-	private static void stampa(String object)
+	private static void println(String object)
 	{
 		System.out.println(object);
 	}
@@ -15,24 +15,24 @@ public class Main {
 	public static void main(String[] args) {
 	// write your code here
 
-		stampa("Run TEST Version 0.0.3.1 - BigNumbers library test");//-- KILLUA APPROVED
+		println("Run TEST Version 0.0.3.2 - BigNumbers library test");//-- KILLUA APPROVED
 
-		stampa("First number:");
-		BN a = new BN(tastiera.nextLine());
-		stampa("Second number:");
-		BN b = new BN(tastiera.nextLine());
+		println("First number:");
+		BN a = new BN(keyboard.nextLine());
+		println("Second number:");
+		BN b = new BN(keyboard.nextLine());
 
 
 		BN c;
 		//System.out.print(a.getS());
 		//System.out.println(a.getOriginal());
 
-		stampa("select operation (+ - x ÷) :");
-		switch (tastiera.next())
+		println("select operation (+ - x ÷) :");
+		switch (keyboard.next())
 		{
 			case "+" :c = a.sum(b); break;
-			case "-": c = new BN(a.differenza(b)); break;
-			default: stampa("Character not valid or work in progress"); c = new BN(); break;
+			case "-": c = new BN(a.difference(b)); break;
+			default: println("Character not valid or work in progress"); c = new BN(); break;
 		}
 
 
@@ -43,7 +43,7 @@ public class Main {
 		System.out.print("result: \n");
 		System.out.print(c.getS());
 		System.out.println(BN.abs(c));
-		stampa(String.valueOf("cifre usate:"+c.length()));
-		stampa(String.valueOf("ID: "+d.getID()));
+		println(String.valueOf("digits used:"+c.length()));
+		println(String.valueOf("ID: "+d.getID()));
     }
 }
