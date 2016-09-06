@@ -1,6 +1,8 @@
 package com.core;
 
 import BigNumbers.BN;
+import BigNumbers.BNIncompatibleTypeException;
+
 import java.util.*;
 
 public class Main {
@@ -15,7 +17,7 @@ public class Main {
 	public static void main(String[] args) {
 	// write your code here
 
-		println("Run TEST Version 0.0.3.2.1 - BigNumbers library test");//-- KILLUA APPROVED
+		println("Run TEST Version 0.0.3.8 - BigNumbers library test");//-- KILLUA APPROVED
 
 		println("First number:");
 		BN a = new BN(keyboard.nextLine());
@@ -32,19 +34,33 @@ public class Main {
 		switch (keyboard.next())
 		{
 			case "+" :c = a.sum(b); break;
-			case "-": c = new BN(a.difference(b)); break;
+			case "-": c = a.difference(b); break;
 			default: println("Character not valid or work in progress"); c = new BN(); break;
 		}
 
 		long finalTime = System.currentTimeMillis();
 
-		BN d = new BN("0");
+		BN d = new BN();
+		try
+		{
+			d = new BN(25.015181815115);
+		}
+		catch (BNIncompatibleTypeException e)
+		{
+			e.printStackTrace();
+		}
+
+		if (BN.getCounter()==2)
+		{
+			d = new BN();
+		}
 
 		System.out.print("result: \n");
 		System.out.print(c.getS());
 		System.out.println(BN.abs(c));
 		println(String.valueOf("digits used:"+c.length()));
-		println(String.valueOf("ID: "+d.getID()));
+		println(String.valueOf("ID: "+d.getID()+" (it must be 3!)"));
+
 		if (((finalTime - startTime) / 1000) >= 60)
 		{
 			long minutes = ((finalTime - startTime) / 1000) / 60;

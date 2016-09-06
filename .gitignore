@@ -1,26 +1,24 @@
 
-*.xml
-
-BigNumber.iml
-
-out/META-INF/MANIFEST.MF
-
-out/production/BigNumber
-
-out/artifacts/BIgNumberLibrary
+*.class
 
 *.DS_store
 
-out/production/BigNumber/META-INF/MANIFEST.MF
+*.MF
+
+*.xml
 
 Appunti.rtf
 
 BigNumbers.iml
 
-*.class
+BigNumber.iml
+
+out/artifacts/BIgNumberLibrary
+
+out/production/BigNumber
+
+out/production/BigNumber/META-INF/MANIFEST.MF
 
 out/production/BigNumber/com/core/Main.class
 
-out/artifacts/BigNumbersTEST/META-INF/MANIFEST.MF
-
-out/artifacts/BigNumbersLibrary/META-INF/MANIFEST.MF
+out/production/BigNumber/BigNumbers/BN.class

@@ -43,6 +43,28 @@ public class BN {
 		BNInitialize();
 	}
 
+	//constructor with number's primitive type
+	public <Type extends Number> BN (Type input) throws BNIncompatibleTypeException
+	{
+		try
+		{
+			//set original string
+			setOriginal(String.valueOf(input));
+		}
+		catch (Exception e)
+		{
+			throw new BNIncompatibleTypeException();
+		}
+
+		counter();
+
+		//set id
+		setID(BN.getCounter()-1);
+
+		BNInitialize();
+	}
+
+	//constructor with another BN
 	public BN (BN a)
 	{
 		//set original string
@@ -267,7 +289,7 @@ public class BN {
 		return byteArray;
 	}
 
-	//return a string with only a digit(the character input)
+	//return a string with only a digit (the character input)
 	private static String charToString (char c)
 	{
 		String s;
@@ -284,7 +306,7 @@ public class BN {
 	}
 
 	//return a String object from a byte array
-	private static String byteToString (byte[] array)
+	private static String byteArrayToString (byte[] array)
 	{
 		String s1 = "";
 		for (int i = array.length - 1; i >= 0; i--)
@@ -611,7 +633,7 @@ public class BN {
 	}
 
 	//this method result a order of size
-	public static BN orderOfSize (long index)//rivedere nome metodo con la traduzione di "ordine di grandezza"
+	public static BN orderOfSize (long index)
 	{
 		BN E = new BN("10");
 		String e = E.geti();
@@ -636,19 +658,41 @@ public class BN {
 
 	}
 
+	//return a boolean value if BN equals zero
+	public boolean isZero ()
+	{
+		boolean isZero;
+		byte[] I = this.getI();
+		long Icounter = I.length;
+		byte[] D = this.getD();
+		long Dcounter = D.length;
+
+		for (byte b:I)
+		{
+			if (b == 0)
+				Icounter--;
+		}
+		for (byte b:D)
+		{
+			if (b == 0)
+				Dcounter--;
+		}
+
+		isZero = (Icounter == 0) && (Dcounter == 0);
+
+		return isZero;
+	}
+
 	//this is a method to sum two BN object
 	public BN sum (BN addend)
 	{
-		//String s1="";
 		byte[] b;
 		byte[] b1;
-		BN C;
-//		if (addend.length()!=this.length())
-//		{
+		BN R;
+
 
 		if (addend.getS() == this.getS())//case with same S
 		{
-
 			//integer
 			if (addend.ILength() > this.ILength()) //case A>B
 			{
@@ -687,7 +731,7 @@ public class BN {
 			{
 				b1 = new byte[1];
 			}
-			else//DA RIGUARDARE!!!! -- TO OPTIMIZE IT!!!!
+			else//TO OPTIMIZE IT!!!!
 			{
 				//decimal
 				if (addend.DLength() > this.DLength()) //case A>B
@@ -732,20 +776,19 @@ public class BN {
 					byte[] b2 = modulo(invert(b1));
 					byte[] b3 = new byte[b1.length];
 					System.arraycopy(b2, 0, b3, 0, b1.length);
-					//b3[0] %= 10;
-					C = new BN(charToString(this.getS()).concat(byteToString(modulo(b))).concat(",").concat(byteToString(b3)));
-					return C;
+					R = new BN(charToString(this.getS()).concat(byteArrayToString(modulo(b))).concat(",").concat(byteArrayToString(b3)));
+					return R;
 				}
 				else
 				{
-					C = new BN(charToString(this.getS()).concat(byteToString(modulo(b))).concat(",").concat(byteToString(modulo(invert(b1)))));
-					return C;
+					R = new BN(charToString(this.getS()).concat(byteArrayToString(modulo(b))).concat(",").concat(byteArrayToString(modulo(invert(b1)))));
+					return R;
 				}
 			}
 			else
 			{
-				C = new BN(charToString(this.getS()).concat(byteToString(modulo(b))));
-				return C;
+				R = new BN(charToString(this.getS()).concat(byteArrayToString(modulo(b))));
+				return R;
 			}
 		}
 		else//case with different S
@@ -765,15 +808,12 @@ public class BN {
 						if (Byte.compare(addend.IByteAt(i), this.IByteAt(i)) > 0 && i < addend.ILength()) //rest and unit
 						{
 							int z = i;
-							while (z < this.ILength() -1 )
+							while (z < this.ILength() - 1)
 							{
-								//if (this.IByteAt(z) <= 0 && z < this.ILength() - 1)
-								//{
-									this.setI(sumByteAt(this.getI(), z + n, -1));
-									this.setI(sumByteAt(this.getI(), z, +10));
-								//}
+								this.setI(sumByteAt(this.getI(), z + n, -1));
+								this.setI(sumByteAt(this.getI(), z, +10));
 								z++;
-							 }
+							}
 
 						}
 						b[i] = add(this.IByteAt(i), invert(addend.IByteAt(i)));
@@ -782,9 +822,9 @@ public class BN {
 					{
 						b[i] = this.IByteAt(i);
 					}
-					C = new BN(byteToString(modulo(b)));
+					R = new BN(byteArrayToString(modulo(b)));
 
-					Pmajor=false;
+					Pmajor = true;
 				}
 				else if (addend.ILength() > this.ILength()) //case A>B
 				{
@@ -796,11 +836,8 @@ public class BN {
 							int z = i;
 							while (z < addend.ILength() - 1)
 							{
-								//if (addend.IByteAt(z) <= 0 && z < addend.ILength() - 1)
-								//{
-									addend.setI(sumByteAt(addend.getI(), z + n, -1));
-									addend.setI(sumByteAt(addend.getI(), z, +10));
-								//}
+								addend.setI(sumByteAt(addend.getI(), z + n, -1));
+								addend.setI(sumByteAt(addend.getI(), z, +10));
 								z++;
 							}
 						}
@@ -811,11 +848,11 @@ public class BN {
 					{
 						b[i] = addend.IByteAt(i);
 					}
-					C = new BN(byteToString(modulo(b)));
+					R = new BN(byteArrayToString(modulo(b)));
 					c1 = m;
-					C.setS(c1);
+					R.setS(c1);
 
-					Pmajor=true;
+					Pmajor = false;
 				}
 				else //case A=B
 				{
@@ -834,7 +871,7 @@ public class BN {
 								}
 								b = sumByteAt(b, i, add(this.IByteAt(i), invert(addend.IByteAt(i))));
 								Iequals = false;
-								Pmajor=true;
+								Pmajor = true;
 
 								i--;
 							}
@@ -850,7 +887,7 @@ public class BN {
 								}
 								b = sumByteAt(b, i, (add(addend.IByteAt(i), invert(this.IByteAt(i)))));
 								Iequals = false;
-								Pmajor=false;
+								Pmajor = false;
 								c1 = m;
 
 								i--;
@@ -859,12 +896,12 @@ public class BN {
 						else
 						{
 							Iequals = true;
-							Pmajor=false;
+							Pmajor = false;
 						}
 
 						i--;
 					}
-					C = new BN(charToString(c1).concat(byteToString(modulo(b))));
+					R = new BN(charToString(c1).concat(byteArrayToString(modulo(b))));
 				}
 
 				if (!addend.getd().isEmpty() || !this.getd().isEmpty())
@@ -874,58 +911,104 @@ public class BN {
 					{
 						b1 = new byte[this.DLength()];
 
+						if (Pmajor)
+						{
 							for (int i = this.DLength() - 1; i >= addend.DLength(); i--)
 							{
 								b1[i] = this.DByteAt(i);
 							}
-
-						for (int i = addend.DLength() - 1; i >= 0; i--)
-						{
-							if (Byte.compare(addend.DByteAt(i), this.DByteAt(i)) > 0 && i >= 0) //rest and unit
+							for (int i = addend.DLength() - 1; i >= 0; i--)
 							{
-								int z = i;
-								while (z > 0)
+								if (Byte.compare(addend.DByteAt(i), this.DByteAt(i)) > 0 && i >= 0) //rest and unit
 								{
-									if (this.DByteAt(z) <= 0 && z > 0)
+									int z = i;
+									while (z > 0)
 									{
-										this.setD(sumByteAt(this.getD(), z - 1, -1));
-										this.setD(sumByteAt(this.getD(), z, +10));
+										if (this.DByteAt(z) <= 0 && z > 0)
+										{
+											this.setD(sumByteAt(this.getD(), z - 1, -1));
+											this.setD(sumByteAt(this.getD(), z, +10));
+										}
+										z--;
 									}
-									z--;
 								}
-							}/*ammaccabanane*/
-							b1 = sumByteAt(b1, i ,(byte) Math.abs(add(this.DByteAt(i), invert(addend.DByteAt(i)))));
+								b1 = sumByteAt(b1, i, (byte) Math.abs(add(this.DByteAt(i), invert(addend.DByteAt(i)))));
+							}
 						}
-					}
+						else
+						{
+							byte[] b2 = new byte[b1.length];
+
+							System.arraycopy(addend.getD(), 0, b2, 0, addend.DLength());
+
+							//addend.setD(b2);
+
+							BN X = new BN(charToString(m).concat(this.getd())).sum(new BN(byteArrayToString(invert(b2))));
+
+							counter -= 3;
+
+							/*if (X.getS() == m)
+							{
+								b = new BN(byteArrayToString(b)).sum(new BN("-1")).getI();
+								counter -= 2;
+							}*/
+
+							b1 = invert(X.getI());
+
+						}
+					}  /*ammaccabanane*/
 					else if (addend.DLength() > this.DLength()) //case A>B
 					{
 						b1 = new byte[addend.DLength()];
 
+						if (!Pmajor)
+						{
 							for (int i = addend.DLength() - 1; i >= this.DLength(); i--)
 							{
 								b1[i] = addend.DByteAt(i);
 							}
 
-						for (int i = this.DLength() - 1; i >= 0; i--)
-						{
-							if (Byte.compare(addend.DByteAt(i), this.DByteAt(i)) < 0 && i >= 0) //rest and unit
+							for (int i = this.DLength() - 1; i >= 0; i--)
 							{
-								int z = i;
-								while (z > 0)
+								if (Byte.compare(addend.DByteAt(i), this.DByteAt(i)) < 0 && i >= 0) //rest and unit
 								{
-									if (addend.DByteAt(z) <= 0 && z > 0)
+									int z = i;
+									while (z > 0)
 									{
-										addend.setD(sumByteAt(addend.getD(), z - 1, -1));
-										addend.setD(sumByteAt(addend.getD(), z, +10));
+										if (addend.DByteAt(z) <= 0 && z > 0)
+										{
+											addend.setD(sumByteAt(addend.getD(), z - 1, -1));
+											addend.setD(sumByteAt(addend.getD(), z, +10));
+										}
+										z--;
 									}
-									z--;
 								}
+								b1 = sumByteAt(b1, i, (byte) Math.abs(add(addend.DByteAt(i), invert(this.DByteAt(i)))));
 							}
-							b1 = sumByteAt(b1,i,(byte) Math.abs(add(addend.DByteAt(i), invert(this.DByteAt(i)))));
-
 						}
+						else
+						{
+							byte[] b2 = new byte[b1.length];
+
+							System.arraycopy(this.getD(), 0, b2, 0, this.DLength());
+
+
+							BN X = new BN(charToString(m).concat(addend.getd())).sum(new BN(byteArrayToString(invert(b2))));
+
+							counter -= 3;
+
+							/*if (X.getS() == m)
+							{
+								b = new BN(byteArrayToString(b)).sum(new BN("-1")).getI();
+								counter -= 2;
+							}*/
+
+							b1 = invert(X.getI());
+						}
+
 						if (Iequals)
 							c1 = m;
+
 					}/*ammmaccabaae*/
 					else //case A=B
 					{
@@ -935,9 +1018,7 @@ public class BN {
 						{
 							if (Byte.compare(addend.DByteAt(i), this.DByteAt(i)) < 0)
 							{
-								//while (i < this.DLength())
-								//{
-								if (add(addend.DByteAt(i),invert(this.DByteAt(i))) < 0 && (!Iequals && !Pmajor))
+								if (add(addend.DByteAt(i), invert(this.DByteAt(i))) < 0 && (!Iequals && !Pmajor))
 								{
 									BN X = orderOfSize(addend.DLength());
 									BN Y = new BN(addend.getd());
@@ -946,52 +1027,49 @@ public class BN {
 
 									try
 									{
-										b1 = invert(new BN(generateCharacterException(byteToString((X.sum(Y)).sum(Z).getI()))).getI());
+										b1 = invert(new BN(generateCharacterException(byteArrayToString((X.sum(Y)).sum(Z).getI()))).getI());
 									}
 									catch (BNCharacterException | BNIntegerException e)
 									{
 										e.printStackTrace();
 										System.exit(1010);
 									}
-									b = new BN(byteToString(b)).sum(new BN("-1")).getI();
+									b = new BN(byteArrayToString(b)).sum(new BN("-1")).getI();
 									break;
-								}		//i++;
-								//}
+								}
 								else
 								{
-									b1 = sumByteAt(b1, i, add(this.DByteAt(i),invert(addend.DByteAt(i))));
+									b1 = sumByteAt(b1, i, add(this.DByteAt(i), invert(addend.DByteAt(i))));
 								}
 							}
-							else if (Byte.compare(addend.DByteAt(i), this.DByteAt(i)) > 0)//GUARDA QUI!!!!!!!!!!!!!!!!
+							else if (Byte.compare(addend.DByteAt(i), this.DByteAt(i)) > 0)
 							{
-								//while (i < this.DLength())
-								//{
-									if(add(this.DByteAt(i),invert(addend.DByteAt(i))) < 0 && (!Iequals && !Pmajor))
-									{
-										BN X = orderOfSize(addend.DLength());
-										BN Y = new BN(this.getd());
-										BN Z = new BN("-".concat((addend.getd())));
-										counter = -3;
 
-										try
-										{
-											b1 = invert(new BN(generateCharacterException(byteToString((X.sum(Y)).sum(Z).getI()))).getI());
-										}
-										catch (BNCharacterException | BNIntegerException e)
-										{
-											e.printStackTrace();
-											System.exit(1010);
-										}
-										b = new BN(byteToString(b)).sum(new BN("-1")).getI();
-										break;
-									}
-									else
+								if (add(this.DByteAt(i), invert(addend.DByteAt(i))) < 0 && (!Iequals && !Pmajor))
+								{
+									BN X = orderOfSize(addend.DLength());
+									BN Y = new BN(this.getd());
+									BN Z = new BN("-".concat((addend.getd())));
+									counter = -3;
+
+									try
 									{
-										b1 = sumByteAt(b1, i, add(addend.DByteAt(i),invert(this.DByteAt(i))));
+										b1 = invert(new BN(generateCharacterException(byteArrayToString((X.sum(Y)).sum(Z).getI()))).getI());
 									}
+									catch (BNCharacterException | BNIntegerException e)
+									{
+										e.printStackTrace();
+										System.exit(1010);
+									}
+									b = new BN(byteArrayToString(b)).sum(new BN("-1")).getI();
+									break;
+								}
+								else
+								{
+									b1 = sumByteAt(b1, i, add(addend.DByteAt(i), invert(this.DByteAt(i))));
+								}
 									if (Iequals)
 										c1 = m;
-								//}
 							}
 
 							i++;
@@ -1000,23 +1078,23 @@ public class BN {
 
 
 					//union between decimal part and integer part for algebraic sum
-					if ((addend.DLength() == 0 ^ this.DLength() == 0) && !C.getAbs().equals("0"))
+					if ((addend.DLength() == 0 ^ this.DLength() == 0) && !R.getAbs().equals("0"))
 					{
-						BN provv = new BN(byteToString(b));
+						BN provv = new BN(byteArrayToString(b));
 						b = provv.sum(new BN("-1")).getI();
-						b1 = (orderOfSize(b1.length).sum(new BN("-".concat(byteToString(invert(b1)))))).getI();
+						b1 = (orderOfSize(b1.length).sum(new BN("-".concat(byteArrayToString(invert(b1)))))).getI();
 						counter -= 4;
-						System.arraycopy(invert(b1),1,b1,0,b1.length-1);//b1 = invert(b1);
+						System.arraycopy(invert(b1),1,b1,0,b1.length-1);
 					}
 
 
-					C.setOriginal(charToString(c1).concat(byteToString(modulo(b))).concat(",").concat(byteToString(modulo(invert(b1)))));
-					C.reInitialize();
+					R.setOriginal(charToString(c1).concat(byteArrayToString(modulo(b))).concat(",").concat(byteArrayToString(modulo(invert(b1)))));
+					R.reInitialize();
 				}
 			}
 			else
 			{
-				C = addend.sum(this);
+				R = addend.sum(this);
 				//C.setS(invert(C.getS()));
 			}
 		}
@@ -1026,7 +1104,7 @@ public class BN {
 		addend.reInitialize();
 
 		//return statement
-		return C;
+		return R;
 	}
 
 	//return the difference between two BN object
@@ -1043,7 +1121,7 @@ public class BN {
 		return R;
 	}
 
-	//return the ~multiplication~ between two BN object
+	//return the multiplication between two BN object
 	public BN multiplication (BN factor)//PROVVISORIO!!
 	{
 		BN R = new BN();
