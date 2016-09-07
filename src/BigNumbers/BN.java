@@ -5,7 +5,7 @@ package BigNumbers;
  * It belong to BigNumber
  */
 
-public class BN {
+public class BN implements Comparable<BN>{
 //internal variables
 	private String original, abs;
 	private char s;
@@ -15,6 +15,7 @@ public class BN {
 	private static final char p = '+', m = '-';
 	private long id;
 	private static long counter = 0;
+	private boolean initialized = false;
 
 
 //constructors
@@ -146,6 +147,14 @@ public class BN {
 	public static long getCounter ()
 	{
 		return counter;
+	}
+	public boolean isInitialized ()
+	{
+		return initialized;
+	}
+	private void setInitialized (boolean initialized)
+	{
+		this.initialized = initialized;
 	}
 	public static char getComma ()
 	{
@@ -309,10 +318,16 @@ public class BN {
 	private static String byteArrayToString (byte[] array)
 	{
 		String s1 = "";
-		for (int i = array.length - 1; i >= 0; i--)
+		if (array.length>0)
 		{
-			s1 = s1.concat(Byte.toString(array[i]));
+			for (int i = array.length - 1; i >= 0; i--)
+			{
+				s1 = s1.concat(Byte.toString(array[i]));
+			}
 		}
+		else
+			s1="0";
+
 		return s1;
 	}
 
@@ -536,9 +551,10 @@ public class BN {
 	}
 
 	//re-initialize BN
-	private void reInitialize()
+	public void reInitialize()
 	{
 		BNInitialize();
+		setInitialized(true);
 	}
 
 	//invert the order of an array
@@ -559,8 +575,14 @@ public class BN {
 		return (byte) (b * -1);
 	}
 
-	//invert sign
-	private static char invert (char c) /*throws BNCharacterException*/
+	//invert sign of number
+	private static int invert (int b)
+	{
+		return (b * -1);
+	}
+
+	//invert sign of BN object
+	private static char invert (char c)
 	{
 		char c1 = p;
 		switch (c)
@@ -571,9 +593,28 @@ public class BN {
 			case m:
 				c1 = p;
 				break;
-			//default: throw new BNCharacterException();
 		}
 		return c1;
+	}
+
+	//compare two byte array
+	private int compareByteArrayValue (byte[] x, byte[] y)
+	{
+		int R = 0;
+
+		for (int i1 = 0; i1 < x.length; i1++)
+		{
+			int i2 =Integer.compare(x[i1],y[i1]);
+			if (i2!=0)
+			{
+				R = i2;
+				break;
+			}
+			else
+				R = 0;
+		}
+
+		return R;
 	}
 
 	//set the value of array equals the value+parameter's byte
@@ -632,7 +673,7 @@ public class BN {
 		return r;
 	}
 
-	//this method result a order of size
+	//this method result a order of size of a BN number
 	public static BN orderOfSize (long index)
 	{
 		BN E = new BN("10");
@@ -652,10 +693,10 @@ public class BN {
 
 			A = new BN(e);
 		}
+
 		counter -= 2;
 
 		return A;
-
 	}
 
 	//return a boolean value if BN equals zero
@@ -681,6 +722,63 @@ public class BN {
 		isZero = (Icounter == 0) && (Dcounter == 0);
 
 		return isZero;
+	}
+
+	//implements interface Comparable
+	public int compareTo(BN y)
+	{
+		int R;
+
+		if (this.getS()==y.getS()) //case with same S
+		{
+			if (this.getS()==p) //case if this S is +
+			{
+				if ((this.DLength() == 0 && y.DLength() == 0)) //case without decimal numbers
+				{
+					int i = Integer.compare(this.ILength(), y.ILength());
+					if (i!=0)
+						R = i;
+					else
+						R = compareByteArrayValue(this.getI(), y.getI());
+				}
+				else if ((this.DLength() != 0 ^ y.DLength() != 0) && (this.length()==y.length())) //case with a only number with decimal part
+				{
+					if (this.ILength() != 0)
+						R = 1;
+					else
+						R = -1;
+				}
+				else
+				{
+					int i = Integer.compare(this.ILength(), y.ILength());
+					if (i!=0)
+						R = i;
+					else
+					{
+						int i1 = compareByteArrayValue(this.getI(), y.getI());
+						if(i1==0)
+							R = compareByteArrayValue(this.getD(),y.getD());
+						else
+							R = i1;
+					}
+				}
+			}
+			else //case if this S is -
+			{
+				R = invert(y.compareTo(this));
+			}
+		}
+		else //same with different S
+		{
+			switch (this.getS())
+			{
+				case p: R = 1; break;
+				case m:	R = -1; break;
+				default: R = 0; break;
+			}
+		}
+
+		return R;
 	}
 
 	//this is a method to sum two BN object
@@ -1089,7 +1187,7 @@ public class BN {
 
 
 					R.setOriginal(charToString(c1).concat(byteArrayToString(modulo(b))).concat(",").concat(byteArrayToString(modulo(invert(b1)))));
-					R.reInitialize();
+					R.BNInitialize();
 				}
 			}
 			else
@@ -1100,8 +1198,8 @@ public class BN {
 		}
 
 		//re-initialization members of sum
-		this.reInitialize();
-		addend.reInitialize();
+		this.BNInitialize();
+		addend.BNInitialize();
 
 		//return statement
 		return R;
@@ -1122,10 +1220,29 @@ public class BN {
 	}
 
 	//return the multiplication between two BN object
-	public BN multiplication (BN factor)//PROVVISORIO!!
+	public BN multiplication (BN factor)//it doesn't work with decimal BN numbers!!
 	{
-		BN R = new BN();
+		BN R;
+		BN detract = new BN("1");
 
+		R = this;
+		factor = factor.difference(detract);
+
+		while (!factor.isZero())
+		{
+			R = R.sum(this);
+			factor = factor.difference(detract);
+		}
+
+		if (factor.getS()!=this.getS())
+			R.setS(invert(R.getS()));
+
+		counter -= 2;
+
+		R.setOriginal(String.valueOf(R.getS()).concat(R.getAbs()));
+
+		factor.BNInitialize();
+		R.BNInitialize();
 
 		return R;
 	}

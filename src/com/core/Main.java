@@ -17,7 +17,7 @@ public class Main {
 	public static void main(String[] args) {
 	// write your code here
 
-		println("Run TEST Version 0.0.3.8 - BigNumbers library test");//-- KILLUA APPROVED
+		println("Run TEST Version 0.0.5.8 - BigNumbers library test");//-- KILLUA APPROVED
 
 		println("First number:");
 		BN a = new BN(keyboard.nextLine());
@@ -35,6 +35,7 @@ public class Main {
 		{
 			case "+" :c = a.sum(b); break;
 			case "-": c = a.difference(b); break;
+			case "x": c = a.multiplication(b); break;
 			default: println("Character not valid or work in progress"); c = new BN(); break;
 		}
 
