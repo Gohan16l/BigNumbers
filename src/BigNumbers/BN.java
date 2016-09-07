@@ -784,6 +784,7 @@ public class BN implements Comparable<BN>{
 	//this is a method to sum two BN object
 	public BN sum (BN addend)
 	{
+		boolean decimal;
 		byte[] b;
 		byte[] b1;
 		BN R;
@@ -791,20 +792,10 @@ public class BN implements Comparable<BN>{
 
 		if (addend.getS() == this.getS())//case with same S
 		{
-			//integer
-			if (addend.ILength() > this.ILength()) //case A>B
-			{
-				b = new byte[addend.ILength()];
-				for (int i = 0; i < this.ILength(); i++)
-				{
-					b[i] = add(addend.IByteAt(i), this.IByteAt(i));
-				}
-				for (int i = this.ILength(); i < addend.ILength(); i++)
-				{
-					b[i] = addend.IByteAt(i);
-				}
-			}
-			else if (addend.ILength() < this.ILength()) //case A<B
+			b1 = new byte[1];
+			decimal= (addend.getd().isEmpty() && this.getd().isEmpty()) ? false : true;
+
+			if (this.compareTo(addend) > 0) //case A>B
 			{
 				b = new byte[this.ILength()];
 				for (int i = 0; i < addend.ILength(); i++)
@@ -815,36 +806,8 @@ public class BN implements Comparable<BN>{
 				{
 					b[i] = this.IByteAt(i);
 				}
-			}
-			else //case A=B
-			{
-				b = new byte[this.ILength()];
-				for (int i = 0; i < this.ILength(); i++)
-				{
-					b[i] = add(addend.IByteAt(i), this.IByteAt(i));
-				}
-			}
 
-			if (addend.getd().isEmpty() && this.getd().isEmpty()) //case without d string
-			{
-				b1 = new byte[1];
-			}
-			else//TO OPTIMIZE IT!!!!
-			{
-				//decimal
-				if (addend.DLength() > this.DLength()) //case A>B
-				{
-					b1 = new byte[addend.DLength()];
-					for (int i = 0; i < this.DLength(); i++)
-					{
-						b1[i] = add(addend.DByteAt(i), this.DByteAt(i));
-					}
-					for (int i = this.DLength(); i < addend.DLength(); i++)
-					{
-						b1[i] = addend.DByteAt(i);
-					}
-				}
-				else if (addend.DLength() < this.DLength()) //case A<B
+				if (decimal)
 				{
 					b1 = new byte[this.DLength()];
 					for (int i = 0; i < addend.DLength(); i++)
@@ -856,7 +819,41 @@ public class BN implements Comparable<BN>{
 						b1[i] = this.DByteAt(i);
 					}
 				}
-				else //case A=B
+			}
+			else if (this.compareTo(addend) < 0) //case A<B
+			{
+				b = new byte[addend.ILength()];
+				for (int i = 0; i < this.ILength(); i++)
+				{
+					b[i] = add(addend.IByteAt(i), this.IByteAt(i));
+				}
+				for (int i = this.ILength(); i < addend.ILength(); i++)
+				{
+					b[i] = addend.IByteAt(i);
+				}
+
+				if (decimal)
+				{
+					b1 = new byte[addend.DLength()];
+					for (int i = 0; i < this.DLength(); i++)
+					{
+						b1[i] = add(addend.DByteAt(i), this.DByteAt(i));
+					}
+					for (int i = this.DLength(); i < addend.DLength(); i++)
+					{
+						b1[i] = addend.DByteAt(i);
+					}
+				}
+			}
+			else //case A=B
+			{
+				b = new byte[this.ILength()];
+				for (int i = 0; i < this.ILength(); i++)
+				{
+					b[i] = add(addend.IByteAt(i), this.IByteAt(i));
+				}
+
+				if (decimal)
 				{
 					b1 = new byte[this.DLength()];
 					for (int i = 0; i < this.DLength(); i++)
@@ -865,6 +862,7 @@ public class BN implements Comparable<BN>{
 					}
 				}
 			}
+
 
 			if (!(b1.length == 1 && b1[0] == 0))//unit rest from D to I
 			{
@@ -889,7 +887,7 @@ public class BN implements Comparable<BN>{
 				return R;
 			}
 		}
-		else//case with different S
+		else//case with different S //TO OPTIMIZE IT!!!
 		{
 			char c1 = p;
 			boolean Iequals = false;
@@ -1252,7 +1250,7 @@ public class BN implements Comparable<BN>{
 		return bn.getAbs();
 	}
 
-	public static BN pow (BN base, long exponent) throws BNExponentException //PROVVISORIO!!!
+	public static BN pow (BN base, long exponent) /*throws BNExponentException*/ //PROVVISORIO!!!
 	{
 		BN A;
 		BN B;
@@ -1261,11 +1259,14 @@ public class BN implements Comparable<BN>{
 		{
 			if (exponent < 0)
 			{
-				throw new BNExponentException();
+				/*throw new BNExponentException();*/
+				B = new BN("0");
+				//counter -= 1;
 			}
 			else if (exponent < 1)
 			{
 				B = new BN("1");
+				//counter -= 1;
 			}
 			else
 			{
@@ -1275,13 +1276,15 @@ public class BN implements Comparable<BN>{
 		else
 		{
 			B = base.multiplication(base);
-			for (long i = 1; i < exponent; i++)
+			for (long i = 2; i < exponent; i++)
 			{
 				B = B.multiplication(base);
 			}
 		}
 
 		A = B;
+
+		//counter -= 2;
 
 		return A;
 	}

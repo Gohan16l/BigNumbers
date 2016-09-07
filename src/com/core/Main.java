@@ -3,7 +3,7 @@ package com.core;
 import BigNumbers.BN;
 import BigNumbers.BNIncompatibleTypeException;
 
-import java.util.*;
+import java.util.Scanner;
 
 public class Main {
 	private static Scanner keyboard = new Scanner(System.in);
@@ -17,7 +17,7 @@ public class Main {
 	public static void main(String[] args) {
 	// write your code here
 
-		println("Run TEST Version 0.0.5.8 - BigNumbers library test");//-- KILLUA APPROVED
+		println("Run TEST Version 0.0.6.3 - BigNumbers library test");//-- KILLUA APPROVED
 
 		println("First number:");
 		BN a = new BN(keyboard.nextLine());
@@ -36,6 +36,8 @@ public class Main {
 			case "+" :c = a.sum(b); break;
 			case "-": c = a.difference(b); break;
 			case "x": c = a.multiplication(b); break;
+			case "^": c = BN.pow(a,Long.decode(b.getOriginal()));
+				break;
 			default: println("Character not valid or work in progress"); c = new BN(); break;
 		}
 

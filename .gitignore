@@ -16,9 +16,3 @@ BigNumber.iml
 out/artifacts/BIgNumberLibrary
 
 out/production/BigNumber
-
-out/production/BigNumber/META-INF/MANIFEST.MF
-
-out/production/BigNumber/com/core/Main.class
-
-out/production/BigNumber/BigNumbers/BN.class

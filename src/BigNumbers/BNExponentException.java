@@ -5,7 +5,7 @@ package BigNumbers;
  * It belong to BigNumber
  */
 
-class BNExponentException extends Exception {
+public class BNExponentException extends Exception {
 //internal variables
 	private final String error="Exponent must not negative";
 
