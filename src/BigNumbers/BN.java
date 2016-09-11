@@ -765,10 +765,16 @@ public class BN implements Comparable<BN>{
 			}
 			else //case if this S is -
 			{
+				y.setS(p);
+				this.setS(p);
+
 				R = invert(y.compareTo(this));
+
+				this.BNInitialize();
+				y.BNInitialize();
 			}
 		}
-		else //same with different S
+		else //case with different S
 		{
 			switch (this.getS())
 			{
@@ -863,6 +869,7 @@ public class BN implements Comparable<BN>{
 				}
 			}
 
+			counter -= 1;
 
 			if (!(b1.length == 1 && b1[0] == 0))//unit rest from D to I
 			{
@@ -1218,29 +1225,145 @@ public class BN implements Comparable<BN>{
 	}
 
 	//return the multiplication between two BN object
-	public BN multiplication (BN factor)//it doesn't work with decimal BN numbers!!
+	public BN multiplication (BN factor)
 	{
 		BN R;
+		BN C;
 		BN detract = new BN("1");
+		int i = 2;
+
+		//counter -= 1;
 
 		R = this;
-		factor = factor.difference(detract);
 
-		while (!factor.isZero())
+		if (this.DLength() == 0 && factor.DLength() == 0)//case without decimal part
 		{
-			R = R.sum(this);
-			factor = factor.difference(detract);
+			if(factor.isZero() || this.isZero())
+			{
+				R = new BN();
+			}
+			else
+			{
+				if (factor.getS()==p)
+				{
+					C = factor.difference(detract);
+					i = 1;
+				}
+				else
+				{
+					C = factor.sum(detract);
+					counter -= 1;
+				}
+
+				long l=0;
+				while (!C.isZero())
+				{
+					R = R.sum(this);
+					if (factor.getS()==p)
+						C = C.difference(detract);
+					else
+						C = C.sum(detract);
+
+					l++;
+				}
+
+				//counter -= (l * i) - 1;
+
+				factor.BNInitialize();
+
+				if (factor.getS() != this.getS())
+				{
+					R.setS(m);
+					//counter += 2;
+				}
+				else
+					R.setS(p);
+			}
+
+			R.setOriginal(String.valueOf(R.getS()).concat(R.getAbs()));
+
+		}
+		else//case with decimal part
+		{
+			BN D;
+			String abs1="", abs2="", provv="", result;
+			int indexComma;
+
+
+			for (int j = 0; j < this.length(); j++)
+			{
+				if (j<this.ILength())
+					abs1 = abs1.concat(String.valueOf(this.IByteAt(j)));
+				else
+				{
+					//this.setD(invert(this.getD()));
+					abs1 = abs1.concat(String.valueOf(this.DByteAt(j - this.ILength())));
+				}
+			}
+
+			for (int j = 0; j < factor.length(); j++)
+			{
+				if (j<factor.ILength())
+					abs2 = abs2.concat(String.valueOf(factor.IByteAt(j)));
+				else
+				{
+					//factor.setD(invert(factor.getD()));
+					abs2 = abs2.concat(String.valueOf(factor.DByteAt(j - factor.ILength())));
+				}
+			}
+
+			C = (new BN(String.valueOf(abs1)).multiplication(new BN(String.valueOf(abs2))));
+
+			//counter -= 2;
+
+			result = C.getAbs();
+
+			indexComma = result.length() - (this.DLength() + factor.DLength());
+
+			if (indexComma <= 0)
+			{
+				int j = 0;
+				{
+					j++;
+				}
+				for (int k = 0; k <= j; k++)
+				{
+					result = "0".concat(result);
+				}
+
+				indexComma = result.length() - (this.DLength() + factor.DLength());
+			}
+
+			String s;
+			for (int j = 0; j < result.length(); j++)
+			{
+				s = String.valueOf(result.charAt(j));
+
+				if (j==indexComma)
+					provv = provv.concat(String.valueOf(comma));
+
+				provv = provv.concat(s);
+			}
+
+			if (factor.getS() != this.getS())
+			{
+				R.setS(m);
+			}
+			else
+				R.setS(p);
+
+			R.setOriginal(String.valueOf(R.getS()).concat(provv));
+
+			counter -= 2;
 		}
 
-		if (factor.getS()!=this.getS())
-			R.setS(invert(R.getS()));
-
-		counter -= 2;
-
-		R.setOriginal(String.valueOf(R.getS()).concat(R.getAbs()));
-
-		factor.BNInitialize();
 		R.BNInitialize();
+
+		if (R.geti().length()==0)//it's probably unnecessary
+		{
+			R.setOriginal(String.valueOf(R.getS()).concat("0").concat(R.getAbs()));
+			R.BNInitialize();
+		}
 
 		return R;
 	}
@@ -1254,31 +1377,37 @@ public class BN implements Comparable<BN>{
 	{
 		BN A;
 		BN B;
+		BN ten = new BN("10");
 
-		if (exponent < 2)
+		if (base==ten)
+			B = BN.orderOfSize(exponent);
+		else
 		{
-			if (exponent < 0)
+			if (exponent < 2)
 			{
+				if (exponent < 0)
+				{
 				/*throw new BNExponentException();*/
-				B = new BN("0");
-				//counter -= 1;
-			}
-			else if (exponent < 1)
-			{
-				B = new BN("1");
-				//counter -= 1;
+					B = new BN("0");
+					//counter -= 1;
+				}
+				else if (exponent < 1)
+				{
+					B = new BN("1");
+					//counter -= 1;
+				}
+				else
+				{
+					B = base;
+				}
 			}
 			else
 			{
-				B = base;
-			}
-		}
-		else
-		{
-			B = base.multiplication(base);
-			for (long i = 2; i < exponent; i++)
-			{
-				B = B.multiplication(base);
+				B = base.multiplication(base);
+				for (long i = 2; i < exponent; i++)
+				{
+					B = B.multiplication(base);
+				}
 			}
 		}
 
