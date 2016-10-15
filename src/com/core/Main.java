@@ -17,7 +17,7 @@ public class Main {
 	public static void main(String[] args) {
 	// write your code here
 
-		println("Run TEST Version 0.0.6.16 - BigNumbers library test");//-- KILLUA APPROVED
+		println("Run TEST Version 0.0.6.22 - BigNumbers library test");//-- KILLUA APPROVED
 
 		println("First number:");
 		BN a = new BN(keyboard.nextLine());

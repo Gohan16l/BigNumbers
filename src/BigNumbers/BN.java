@@ -16,6 +16,7 @@ public class BN implements Comparable<BN>{
 	private long id;
 	private static long counter = 0;
 	private boolean initialized = false;
+	private boolean bn = true;
 
 
 //constructors
@@ -23,11 +24,14 @@ public class BN implements Comparable<BN>{
 	//constructor null
 	public BN ()
 	{
-		I = new byte[]{0};
+		/*I = new byte[]{0};
 		D = new byte[]{0};
 		s = '+';
 		original = "+0";
-		abs = "0";
+		abs = "0";*/
+
+		setOriginal("+0");
+		BNInitialize();
 	}
 
 	//constructor with the string that contain the number
@@ -40,6 +44,22 @@ public class BN implements Comparable<BN>{
 
 		//set id
 		setID(BN.getCounter()-1);
+
+		BNInitialize();
+	}
+
+	private BN (String input, char c)
+	{
+		//set original string
+		setOriginal(input);
+
+		counter();
+
+		//set id
+		setID(BN.getCounter()-1);
+
+		//ignore string null
+		setBn(false);
 
 		BNInitialize();
 	}
@@ -156,6 +176,14 @@ public class BN implements Comparable<BN>{
 	{
 		this.initialized = initialized;
 	}
+	public boolean isBn ()
+	{
+		return bn;
+	}
+	public void setBn (boolean bn)
+	{
+		this.bn = bn;
+	}
 	public static char getComma ()
 	{
 		return comma;
@@ -176,9 +204,25 @@ public class BN implements Comparable<BN>{
 
 //methods
 
+	//build a string with a repetition of string input
+	private String stringTokenizer (String str, int repeat)
+	{
+		String s = "";
+
+		if (repeat > 0)
+		{
+			for (; repeat > 0 ;repeat--)
+			{
+				s = s.concat(str);
+			}
+		}
+
+		return s;
+	}
+
 	//create an Exception for integer's array
 	private String generateCharacterException (String input) throws BNCharacterException, BNIntegerException
-	{
+	 {
 		String str = "";
 		boolean exit=false;
 		int i = 0;
@@ -194,39 +238,39 @@ public class BN implements Comparable<BN>{
 					break;
 				case '1':
 					str = input.substring(i);
-					exit=true;
+					exit = true;
 					break;
 				case '2':
 					str = input.substring(i);
-					exit=true;
+					exit = true;
 					break;
 				case '3':
 					str = input.substring(i);
-					exit=true;
+					exit = true;
 					break;
 				case '4':
 					str = input.substring(i);
-					exit=true;
+					exit = true;
 					break;
 				case '5':
 					str = input.substring(i);
-					exit=true;
+					exit = true;
 					break;
 				case '6':
 					str = input.substring(i);
-					exit=true;
+					exit = true;
 					break;
 				case '7':
 					str = input.substring(i);
-					exit=true;
+					exit = true;
 					break;
 				case '8':
 					str = input.substring(i);
-					exit=true;
+					exit = true;
 					break;
 				case '9':
 					str = input.substring(i);
-					exit=true;
+					exit = true;
 					break;
 				case p:
 					i++;
@@ -244,7 +288,7 @@ public class BN implements Comparable<BN>{
 					throw new BNCharacterException();
 			}
 		}
-		if(str.equals(""))
+		if(str.equals("") && isBn())
 			throw new BNIntegerException();
 
 		return str;
@@ -355,7 +399,7 @@ public class BN implements Comparable<BN>{
 		try
 		{
 			//check original is not null
-			if (!originalIsNotNull())
+			if (!originalIsNotNull() && isBn())
 			{
 				throw new BNInputException();
 			}
@@ -379,15 +423,20 @@ public class BN implements Comparable<BN>{
 
 			//set s
 			int n = 0;
-			if (original.charAt(0) == p || original.charAt(0) == m)
+			if (originalIsNotNull())
 			{
-				setS(original.charAt(0));
-				n++;
+				if (original.charAt(0) == p || original.charAt(0) == m)
+				{
+					setS(original.charAt(0));
+					n++;
+				}
+				else
+				{
+					setS(p);
+				}
 			}
 			else
-			{
 				setS(p);
-			}
 
 			//declaration of boolean variable to use it later in try block
 			boolean b1 = true;
@@ -557,7 +606,19 @@ public class BN implements Comparable<BN>{
 		setInitialized(true);
 	}
 
-	//invert the order of an array
+	/*private <Type extends Array> Type[] invert (Type[] input)
+	{
+		Type[] array;
+		array = new Type[input.length];
+		int n = input.length - 1;
+		for (Type b : input)
+		{
+			array[n--] = b;
+		}
+		return array;
+	}*/
+
+	//invert the order of a byte array
 	private static byte[] invert (byte[] input)
 	{
 		byte[] array = new byte[input.length];
@@ -595,6 +656,18 @@ public class BN implements Comparable<BN>{
 				break;
 		}
 		return c1;
+	}
+
+	//invert the order of a char array
+	private static char[] invert (char[] input)
+	{
+		char[] array = new char[input.length];
+		int n = input.length - 1;
+		for (char b : input)
+		{
+			array[n--] = b;
+		}
+		return array;
 	}
 
 	//compare two byte array
@@ -799,7 +872,7 @@ public class BN implements Comparable<BN>{
 		if (addend.getS() == this.getS())//case with same S
 		{
 			b1 = new byte[1];
-			decimal= (addend.getd().isEmpty() && this.getd().isEmpty()) ? false : true;
+			decimal = !(addend.getd().isEmpty() && this.getd().isEmpty());
 
 			if (this.compareTo(addend) > 0) //case A>B
 			{
@@ -1229,140 +1302,156 @@ public class BN implements Comparable<BN>{
 	{
 		BN R;
 		BN C;
-		BN detract = new BN("1");
-		int i = 2;
+		BN N = new BN();
+		//BN detract = new BN("1");
+		//int i = 2;
 
 		//counter -= 1;
 
-		R = this;
+		R = N;
 
-		if (this.DLength() == 0 && factor.DLength() == 0)//case without decimal part
+		if (this.length() >= factor.length())
 		{
-			if(factor.isZero() || this.isZero())
+
+			if (this.DLength() == 0 && factor.DLength() == 0)//case without decimal part
 			{
-				R = new BN();
-			}
-			else
-			{
-				if (factor.getS()==p)
+				BN partial = new BN();
+				BN total = new BN();
+
+				if (factor.isZero() || this.isZero())
 				{
-					C = factor.difference(detract);
-					i = 1;
+					R = N;
 				}
 				else
 				{
-					C = factor.sum(detract);
-					counter -= 1;
-				}
+					char[] f = invert(factor.getAbs().toCharArray());
+					String s;
+					long l = 0;
 
-				long l=0;
-				while (!C.isZero())
-				{
-					R = R.sum(this);
-					if (factor.getS()==p)
-						C = C.difference(detract);
+					for (char c : f)
+					{
+						s = String.valueOf(c);
+						l++;
+
+						for (long l1 = 1; l1 < l; l1++)
+						{
+							s = s.concat("0");
+						}
+
+						for (long l2 = Long.parseLong(s); l2 >= 0; l2--)
+						{
+							if (l2 != 0)
+								partial = partial.sum(this);
+							else
+								partial = partial.sum(new BN(stringTokenizer("0",s.length() - 1), 'c'));
+						}
+
+
+						total = total.sum(partial);
+
+						partial = new BN();
+					}
+
+
+					if (factor.getS() != this.getS())
+					{
+						R.setS(m);
+					}
 					else
-						C = C.sum(detract);
+					{
+						R.setS(p);
+					}
 
-					l++;
+					R.setAbs(total.getAbs());
 				}
 
-				//counter -= (l * i) - 1;
+				R.setOriginal(String.valueOf(R.getS()).concat(R.getAbs()));
+			}
+			else//case with decimal part
+			{
+				//BN D;
+				String abs1 = "", abs2 = "", provv = "", result;
+				int indexComma;
 
-				factor.BNInitialize();
+
+				for (int j = 0; j < this.length(); j++)
+				{
+					if (j < this.ILength())
+						abs1 = abs1.concat(String.valueOf(this.IByteAt(j)));
+					else
+					{
+						//this.setD(invert(this.getD()));
+						abs1 = abs1.concat(String.valueOf(this.DByteAt(j - this.ILength())));
+					}
+				}
+
+				for (int j = 0; j < factor.length(); j++)
+				{
+					if (j < factor.ILength())
+						abs2 = abs2.concat(String.valueOf(factor.IByteAt(j)));
+					else
+					{
+						//factor.setD(invert(factor.getD()));
+						abs2 = abs2.concat(String.valueOf(factor.DByteAt(j - factor.ILength())));
+					}
+				}
+
+				C = (new BN(String.valueOf(abs1)).multiplication(new BN(String.valueOf(abs2))));
+
+				//counter -= 2;
+
+				result = C.getAbs();
+
+				indexComma = result.length() - (this.DLength() + factor.DLength());
+
+				if (indexComma <= 0)
+				{
+					int j = 0;
+					{
+						j++;
+					}
+					for (int k = 0; k <= j; k++)
+					{
+						result = "0".concat(result);
+					}
+
+					indexComma = result.length() - (this.DLength() + factor.DLength());
+				}
+
+				String s;
+				for (int j = 0; j < result.length(); j++)
+				{
+					s = String.valueOf(result.charAt(j));
+
+					if (j == indexComma)
+						provv = provv.concat(String.valueOf(comma));
+
+					provv = provv.concat(s);
+				}
 
 				if (factor.getS() != this.getS())
 				{
 					R.setS(m);
-					//counter += 2;
 				}
 				else
 					R.setS(p);
+
+				R.setOriginal(String.valueOf(R.getS()).concat(provv));
+
+				counter -= 2;
 			}
 
-			R.setOriginal(String.valueOf(R.getS()).concat(R.getAbs()));
-
-		}
-		else//case with decimal part
-		{
-			BN D;
-			String abs1="", abs2="", provv="", result;
-			int indexComma;
-
-
-			for (int j = 0; j < this.length(); j++)
-			{
-				if (j<this.ILength())
-					abs1 = abs1.concat(String.valueOf(this.IByteAt(j)));
-				else
-				{
-					//this.setD(invert(this.getD()));
-					abs1 = abs1.concat(String.valueOf(this.DByteAt(j - this.ILength())));
-				}
-			}
-
-			for (int j = 0; j < factor.length(); j++)
-			{
-				if (j<factor.ILength())
-					abs2 = abs2.concat(String.valueOf(factor.IByteAt(j)));
-				else
-				{
-					//factor.setD(invert(factor.getD()));
-					abs2 = abs2.concat(String.valueOf(factor.DByteAt(j - factor.ILength())));
-				}
-			}
-
-			C = (new BN(String.valueOf(abs1)).multiplication(new BN(String.valueOf(abs2))));
-
-			//counter -= 2;
-
-			result = C.getAbs();
-
-			indexComma = result.length() - (this.DLength() + factor.DLength());
-
-			if (indexComma <= 0)
-			{
-				int j = 0;
-				{
-					j++;
-				}
-				for (int k = 0; k <= j; k++)
-				{
-					result = "0".concat(result);
-				}
-
-				indexComma = result.length() - (this.DLength() + factor.DLength());
-			}
-
-			String s;
-			for (int j = 0; j < result.length(); j++)
-			{
-				s = String.valueOf(result.charAt(j));
-
-				if (j==indexComma)
-					provv = provv.concat(String.valueOf(comma));
-
-				provv = provv.concat(s);
-			}
-
-			if (factor.getS() != this.getS())
-			{
-				R.setS(m);
-			}
-			else
-				R.setS(p);
-
-			R.setOriginal(String.valueOf(R.getS()).concat(provv));
-
-			counter -= 2;
-		}
-
-		R.BNInitialize();
-
-		if (R.geti().length()==0)//it's probably unnecessary
-		{
-			R.setOriginal(String.valueOf(R.getS()).concat("0").concat(R.getAbs()));
 			R.BNInitialize();
+
+			if (R.geti().length() == 0)//it's probably unnecessary
+			{
+				R.setOriginal(String.valueOf(R.getS()).concat("0").concat(R.getAbs()));
+				R.BNInitialize();
+			}
+		}
+		else
+		{
+			R = factor.multiplication(this);
 		}
 
 		return R;
