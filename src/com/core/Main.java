@@ -17,7 +17,7 @@ public class Main {
 	public static void main(String[] args) {
 	// write your code here
 
-		println("Run TEST Version 0.0.6.22 - BigNumbers library test");//-- KILLUA APPROVED
+		println("Run TEST Version 0.0.6.23 - BigNumbers library test");//-- KILLUA APPROVED
 
 		println("First number:");
 		BN a = new BN(keyboard.nextLine());
@@ -36,8 +36,7 @@ public class Main {
 			case "+": startTime = System.currentTimeMillis(); c = a.sum(b);  break;
 			case "-": startTime = System.currentTimeMillis(); c = a.difference(b);  break;
 			case "x": startTime = System.currentTimeMillis(); c = a.multiplication(b);  break;
-			case "^": startTime = System.currentTimeMillis(); c = BN.pow(a,Long.decode(b.getOriginal()));
-				break;
+			case "^": startTime = System.currentTimeMillis(); c = BN.pow(a,Long.decode(b.getOriginal())); break;
 			default: println("Character not valid or work in progress"); c = new BN(); startTime = System.currentTimeMillis(); break;
 		}
 
@@ -64,21 +63,21 @@ public class Main {
 		println(String.valueOf("digits used:"+c.length()));
 		println(String.valueOf("ID: "+d.getID()+" (it must be 3!)"));
 
-		if (((finalTime - startTime) / 1000) >= 60)
-		{
-			long minutes = ((finalTime - startTime) / 1000) / 60;
-			long ms = minutes * 60;
-			long seconds = ((finalTime - startTime) / 1000) - ms;
-			System.out.print("execution time: " + minutes + " minutes and " + seconds + " seconds");
-		}
-		else if ((((finalTime - startTime) / 1000) / 60) >= 60)
+		if ((((finalTime - startTime) / 1000) / 60) >= 60)
 		{
 			long hours = (((finalTime - startTime) / 1000) / 60) /60;
 			long hs = hours * 60;
 			long minutes = (((finalTime - startTime) / 1000) / 60) - hs;
 			long ms = minutes * 60;
 			long seconds = ((finalTime - startTime) / 1000) - ms;
-			System.out.print("execution time: " + hours + "hours, " + minutes + " minutes and " + seconds + " seconds");
+			System.out.print("execution time: " + hours + " hours, " + minutes + " minutes and " + seconds + " seconds");
+		}
+		else if (((finalTime - startTime) / 1000) >= 60)
+		{
+			long minutes = ((finalTime - startTime) / 1000) / 60;
+			long ms = minutes * 60;
+			long seconds = ((finalTime - startTime) / 1000) - ms;
+			System.out.print("execution time: " + minutes + " minutes and " + seconds + " seconds");
 		}
 		else
 		{
