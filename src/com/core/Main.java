@@ -1,7 +1,6 @@
 package com.core;
 
 import BigNumbers.BN;
-import BigNumbers.BNIncompatibleTypeException;
 
 import java.util.Scanner;
 
@@ -15,9 +14,10 @@ public class Main {
 	}
 
 	public static void main(String[] args) {
-	// write your code here
 
-		println("Run TEST Version 0.0.6.23 - BigNumbers library test");//-- KILLUA APPROVED
+		println("Run TEST Version 0.1.0.0 - BigNumbers library test");//-- KILLUA APPROVED
+
+		//println(args[0]);
 
 		println("First number:");
 		BN a = new BN(keyboard.nextLine());
@@ -46,10 +46,6 @@ public class Main {
 		try
 		{
 			d = new BN(25.015181815115);
-		}
-		catch (BNIncompatibleTypeException e)
-		{
-			e.printStackTrace();
 		}
 
 		if (BN.getCounter()==2)

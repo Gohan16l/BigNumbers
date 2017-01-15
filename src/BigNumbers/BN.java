@@ -7,30 +7,17 @@ package BigNumbers;
 
 public class BN implements Comparable<BN>{
 //internal variables
-	private String original, abs;
-	private char s;
-	private String i, d;
-	private byte[] I, D;
-	private static final char comma = ',', period = '.';
-	private static final char p = '+', m = '-';
+	private static final char comma = ',', period = '.', p = '+', m = '-';
 	private long id;
-	private static long counter = 0;
-	private boolean initialized = false;
-	private boolean bn = true;
-
+	private static long counter=0;
+	private String number;
 
 //constructors
 
 	//constructor null
 	public BN ()
 	{
-		/*I = new byte[]{0};
-		D = new byte[]{0};
-		s = '+';
-		original = "+0";
-		abs = "0";*/
-
-		setOriginal("+0");
+		setNumber("+0");
 		BNInitialize();
 	}
 
@@ -38,50 +25,25 @@ public class BN implements Comparable<BN>{
 	public BN (String input)
 	{
 		//set original string
-		setOriginal(input);
-
-		counter();
+		setNumber(input);
 
 		//set id
-		setID(BN.getCounter()-1);
+		setId(BN.getCounter());
 
-		BNInitialize();
-	}
-
-	private BN (String input, char c)
-	{
-		//set original string
-		setOriginal(input);
-
-		counter();
-
-		//set id
-		setID(BN.getCounter()-1);
-
-		//ignore string null
-		setBn(false);
-
+		//initialization of internal variables
 		BNInitialize();
 	}
 
 	//constructor with number's primitive type
-	public <Type extends Number> BN (Type input) throws BNIncompatibleTypeException
+	public <Type extends Number> BN (Type input)
 	{
-		try
-		{
-			//set original string
-			setOriginal(String.valueOf(input));
-		}
-		catch (Exception e)
-		{
-			throw new BNIncompatibleTypeException();
-		}
-
-		counter();
+		//set original string
+		setNumber(String.valueOf(input));
 
 		//set id
-		setID(BN.getCounter()-1);
+		setId(BN.getCounter()-1);
 
+		//initialization of internal variables
 		BNInitialize();
 	}
 
@@ -89,210 +51,139 @@ public class BN implements Comparable<BN>{
 	public BN (BN a)
 	{
 		//set original string
-		setOriginal(a.getOriginal());
-
-		counter();
+		setNumber(a.getNumber());
 
 		//set id
-		setID(BN.getCounter()-1);
+		setId(BN.getCounter());
 
 		this.reInitialize();
 	}
 
 //manipulators
-	public String getOriginal ()
-	{
-		return original;
-	}
-	private void setOriginal (String original)
-	{
-		this.original = original;
-	}
-	private String getAbs ()
-	{
-		return abs;
-	}
-	private void setAbs (String abs)
-	{
-		this.abs = abs;
-	}
-	public String geti ()
-	{
-		return i;
-	}
-	private void seti (String i)
-	{
-		this.i = i;
-	}
-	public String getd ()
-	{
-		return d;
-	}
-	private void setd (String d)
-	{
-		this.d = d;
-	}
-	public byte[] getI ()
-	{
-		return I;
-	}
-	private void setI (byte[] i)
-	{
-		I = i;
-	}
-	public byte[] getD ()
-	{
-		return D;
-	}
-	private void setD (byte[] d)
-	{
-		D = d;
-	}
-	public char getS ()
-	{
-		return s;
-	}
-	private void setS (char s)
-	{
-		this.s = s;
-	}
-	public long getID ()
-	{
-		return id;
-	}
-	private void setID (long id)
-	{
-		this.id = id;
-	}
-	public static long getCounter ()
-	{
-		return counter;
-	}
-	public boolean isInitialized ()
-	{
-		return initialized;
-	}
-	private void setInitialized (boolean initialized)
-	{
-		this.initialized = initialized;
-	}
-	public boolean isBn ()
-	{
-		return bn;
-	}
-	public void setBn (boolean bn)
-	{
-		this.bn = bn;
-	}
-	public static char getComma ()
-	{
+	public static char getComma() {
 		return comma;
 	}
-	public static char getPeriod ()
-	{
+	public static char getPeriod() {
 		return period;
 	}
-	public static char getP ()
-	{
+	public static char getP() {
 		return p;
 	}
-	public static char getM ()
-	{
+	public static char getM() {
 		return m;
 	}
-
+	public long getId() {
+		return id;
+	}
+	private void setId(long id) {
+		this.id = id;
+	}
+	private static long getCounter() {
+		//increase the counter value and return this value -1
+		return (counter++ -1);
+	}
+	private static void setCounter(long counter) {
+		BN.counter = counter;
+	}
+	public String getNumber() {
+		return number;
+	}
+	public void setNumber(String number) {
+		this.number = number;
+		BNInitialize();
+	}
 
 //methods
 
 	//build a string with a repetition of string input
-	private String stringTokenizer (String str, int repeat)
-	{
-		String s = "";
-
-		if (repeat > 0)
-		{
-			for (; repeat > 0 ;repeat--)
-			{
-				s = s.concat(str);
-			}
-		}
-
-		return s;
-	}
+//	private String stringTokenizer (String str, int repeat)
+//	{
+//		String s = "";
+//
+//		if (repeat > 0)
+//		{
+//			for (; repeat > 0 ;repeat--)
+//			{
+//				s = s.concat(str);
+//			}
+//		}
+//
+//		return s;
+//	}
 
 	//create an Exception for integer's array
-	private String generateCharacterException (String input) throws BNCharacterException, BNIntegerException
-	 {
-		String str = "";
-		boolean exit=false;
-		int i = 0;
-
-		while (!exit && i < input.length())
-		{
-			switch (input.charAt(i))
-			{
-				case '0':
-					if (i == input.length()-1)
-						str = input.substring(i);
-					i++;
-					break;
-				case '1':
-					str = input.substring(i);
-					exit = true;
-					break;
-				case '2':
-					str = input.substring(i);
-					exit = true;
-					break;
-				case '3':
-					str = input.substring(i);
-					exit = true;
-					break;
-				case '4':
-					str = input.substring(i);
-					exit = true;
-					break;
-				case '5':
-					str = input.substring(i);
-					exit = true;
-					break;
-				case '6':
-					str = input.substring(i);
-					exit = true;
-					break;
-				case '7':
-					str = input.substring(i);
-					exit = true;
-					break;
-				case '8':
-					str = input.substring(i);
-					exit = true;
-					break;
-				case '9':
-					str = input.substring(i);
-					exit = true;
-					break;
-				case p:
-					i++;
-					break;
-				case m:
-					i++;
-					break;
-				case comma:
-					i++;
-					break;
-				case period:
-					i++;
-					break;
-				default:
-					throw new BNCharacterException();
-			}
-		}
-		if(str.equals("") && isBn())
-			throw new BNIntegerException();
-
-		return str;
-	}
+//	private String generateCharacterException (String input) throws BNCharacterException, BNIntegerException
+//	 {
+//		String str = "";
+//		boolean exit=false;
+//		int i = 0;
+//
+//		while (!exit && i < input.length())
+//		{
+//			switch (input.charAt(i))
+//			{
+//				case '0':
+//					if (i == input.length()-1)
+//						str = input.substring(i);
+//					i++;
+//					break;
+//				case '1':
+//					str = input.substring(i);
+//					exit = true;
+//					break;
+//				case '2':
+//					str = input.substring(i);
+//					exit = true;
+//					break;
+//				case '3':
+//					str = input.substring(i);
+//					exit = true;
+//					break;
+//				case '4':
+//					str = input.substring(i);
+//					exit = true;
+//					break;
+//				case '5':
+//					str = input.substring(i);
+//					exit = true;
+//					break;
+//				case '6':
+//					str = input.substring(i);
+//					exit = true;
+//					break;
+//				case '7':
+//					str = input.substring(i);
+//					exit = true;
+//					break;
+//				case '8':
+//					str = input.substring(i);
+//					exit = true;
+//					break;
+//				case '9':
+//					str = input.substring(i);
+//					exit = true;
+//					break;
+//				case p:
+//					i++;
+//					break;
+//				case m:
+//					i++;
+//					break;
+//				case comma:
+//					i++;
+//					break;
+//				case period:
+//					i++;
+//					break;
+//				default:
+//					throw new BNCharacterException();
+//			}
+//		}
+//		if(str.equals("") && isBn())
+//			throw new BNIntegerException();
+//
+//		return str;
+//	}
 
 	//check original isn't null
 	private boolean originalIsNotNull ()
@@ -300,38 +191,23 @@ public class BN implements Comparable<BN>{
 		return !(original.isEmpty() || original.equals(null));
 	}
 
-	//count of all objects created with this class
-	private static void counter ()
-	{
-		counter++;
-	}
-
-	//return I array length
-	private int ILength ()
-	{
-		return I.length;
-	}
-
-	//return D array length
-	private int DLength ()
-	{
-		return D.length;
-	}
+//	//return I array length
+//	private int ILength ()
+//	{
+//		return I.length;
+//	}
+//
+//	//return D array length
+//	private int DLength ()
+//	{
+//		return D.length;
+//	}
 
 	//return BN length
 	public int length ()
 	{
-		return ILength() + DLength();
-	}
-
-	//return a digit of BN byte arrays
-	public byte IByteAt (int index)
-	{
-		return I[index];
-	}
-	public byte DByteAt (int index)
-	{
-		return D[index];
+		//return ILength() + DLength();
+		return getNumber().length();
 	}
 
 	//set a value in the array's index in parameters
@@ -1126,7 +1002,6 @@ public class BN implements Comparable<BN>{
 							/*if (X.getS() == m)
 							{
 								b = new BN(byteArrayToString(b)).sum(new BN("-1")).getI();
-								counter -= 2;
 							}*/
 
 							b1 = invert(X.getI());
@@ -1172,12 +1047,6 @@ public class BN implements Comparable<BN>{
 							BN X = new BN(charToString(m).concat(addend.getd())).sum(new BN(byteArrayToString(invert(b2))));
 
 							counter -= 3;
-
-							/*if (X.getS() == m)
-							{
-								b = new BN(byteArrayToString(b)).sum(new BN("-1")).getI();
-								counter -= 2;
-							}*/
 
 							b1 = invert(X.getI());
 						}
@@ -1264,7 +1133,7 @@ public class BN implements Comparable<BN>{
 					}
 
 
-					R.setOriginal(charToString(c1).concat(byteArrayToString(modulo(b))).concat(",").concat(byteArrayToString(modulo(invert(b1)))));
+					R.setNumber(charToString(c1).concat(byteArrayToString(modulo(b))).concat(",").concat(byteArrayToString(modulo(invert(b1)))));
 					R.BNInitialize();
 				}
 			}
@@ -1305,8 +1174,6 @@ public class BN implements Comparable<BN>{
 		BN N = new BN();
 		//BN detract = new BN("1");
 		//int i = 2;
-
-		//counter -= 1;
 
 		R = N;
 
@@ -1365,7 +1232,7 @@ public class BN implements Comparable<BN>{
 					R.setAbs(total.getAbs());
 				}
 
-				R.setOriginal(String.valueOf(R.getS()).concat(R.getAbs()));
+				R.setNumber(String.valueOf(R.getS()).concat(R.getAbs()));
 			}
 			else//case with decimal part
 			{
@@ -1397,8 +1264,6 @@ public class BN implements Comparable<BN>{
 				}
 
 				C = (new BN(String.valueOf(abs1)).multiplication(new BN(String.valueOf(abs2))));
-
-				//counter -= 2;
 
 				result = C.getAbs();
 
@@ -1436,7 +1301,7 @@ public class BN implements Comparable<BN>{
 				else
 					R.setS(p);
 
-				R.setOriginal(String.valueOf(R.getS()).concat(provv));
+				R.setNumber(String.valueOf(R.getS()).concat(provv));
 
 				counter -= 2;
 			}
@@ -1445,7 +1310,7 @@ public class BN implements Comparable<BN>{
 
 			if (R.geti().length() == 0)//it's probably unnecessary
 			{
-				R.setOriginal(String.valueOf(R.getS()).concat("0").concat(R.getAbs()));
+				R.setNumber(String.valueOf(R.getS()).concat("0").concat(R.getAbs()));
 				R.BNInitialize();
 			}
 		}
@@ -1478,12 +1343,10 @@ public class BN implements Comparable<BN>{
 				{
 				/*throw new BNExponentException();*/
 					B = new BN("0");
-					//counter -= 1;
 				}
 				else if (exponent < 1)
 				{
 					B = new BN("1");
-					//counter -= 1;
 				}
 				else
 				{
@@ -1501,8 +1364,6 @@ public class BN implements Comparable<BN>{
 		}
 
 		A = B;
-
-		//counter -= 2;
 
 		return A;
 	}
