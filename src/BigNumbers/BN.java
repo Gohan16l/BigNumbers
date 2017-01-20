@@ -85,7 +85,7 @@ public class BN implements Comparable<BN>{
 		this.s = s;
 	}
 	public String getNumber() {
-		return number;
+		return String.valueOf(getS()).concat(number);
 	}
 	public void setNumber(String number) {
 		this.number = number;
@@ -116,27 +116,54 @@ public class BN implements Comparable<BN>{
 		return c1;
 	}
 
+	private String regularize(String s)
+	{
+		if (s.contains(String.valueOf(period)))
+		{
+			s = s.replaceAll(String.valueOf(period),String.valueOf(comma));
+		}
+
+		return s;
+	}
+
 	//create an Exception if number contains a not valid character
 	private boolean generateCharacterException (String input)
 	 {
+	 	input = regularize(input);
+
 		boolean generate=false;
 
-		for (int i=0;i<input.length();)
+		 for (int i = 0; i < input.length(); )
 		{
-			if (!((input.charAt(i) == '0') ||
-				  (input.charAt(i) == '1') ||
-				  (input.charAt(i) == '2') ||
-				  (input.charAt(i) == '3') ||
-				  (input.charAt(i) == '4') ||
-				  (input.charAt(i) == '5') ||
-				  (input.charAt(i) == '6') ||
-				  (input.charAt(i) == '7') ||
-				  (input.charAt(i) == '8') ||
-				  (input.charAt(i) == '9')
-				))
+			if (!(((input.charAt(i) == '0') ||
+				   (input.charAt(i) == '1') ||
+				   (input.charAt(i) == '2') ||
+				   (input.charAt(i) == '3') ||
+				   (input.charAt(i) == '4') ||
+				   (input.charAt(i) == '5') ||
+				   (input.charAt(i) == '6') ||
+				   (input.charAt(i) == '7') ||
+				   (input.charAt(i) == '8') ||
+				   (input.charAt(i) == '9') ||
+				   (input.charAt(i) == p) ||
+				   (input.charAt(i) == m) ||
+				   (input.charAt(i) == comma)
+				  )
+				 )
+			   )
 			{
 				generate = true;
 				break;
+			}
+
+			if (!generate)
+			{
+				if ((input.indexOf(comma) != input.lastIndexOf(comma)) ||
+					(input.indexOf(p) != input.lastIndexOf(p)) ||
+					(input.indexOf(m) != input.lastIndexOf(m)))
+				{
+					generate = true;
+				}
 			}
 		}
 
@@ -195,75 +222,12 @@ public class BN implements Comparable<BN>{
 		}
 	}
 
-	/*******************************************************************************************************/
-
-	//compare two byte array
-	private static int compareByteArrayValue (byte[] x, byte[] y)
-	{
-		int R = 0;
-
-		for (int i1 = 0; i1 < x.length; i1++)
-		{
-			int i2 =Integer.compare(x[i1],y[i1]);
-			if (i2!=0)
-			{
-				R = i2;
-				break;
-			}
-			else
-				R = 0;
-		}
-
-		return R;
-	}
-
-	//return a byte array contains only a digit per index from an array overcrowded
-	private static byte[] modulo (byte[] b)
-	{
-		byte temporary;
-		byte rest;
-		byte unit = 1;
-		for (int i = 0; i < b.length - 1; i++)
-		{
-			temporary = b[i];
-			if (temporary >= 10)
-			{
-				rest = (byte) (temporary % 10);
-				b[i] = rest;
-				b[i + 1] = add(b[i + 1], unit);
-			}
-		}
-
-		byte[] r;
-		int i = 0;
-		if (b[b.length - 1] >= 10)
-		{
-			r = new byte[b.length + 1];
-			rest = (byte) (b[b.length - 1] % 10);
-			b[b.length - 1] = rest;
-
-			for (byte b1 : b)
-			{
-				r[i++] = b1;
-			}
-			r[b.length] = unit;
-		}
-		else
-		{
-			r = new byte[b.length];
-			for (byte b1 : b)
-			{
-				r[i++] = b1;
-			}
-		}
-		return r;
-	}
-
+	//CONTROLLARE
 	//this method result a order of size of a BN number
 	public static BN orderOfSize (long index)
 	{
 		BN E = new BN("10");
-		String e = E.geti();
+		String e = E.getNumber();
 		BN A;
 
 		if (index <= 2)
@@ -280,97 +244,89 @@ public class BN implements Comparable<BN>{
 			A = new BN(e);
 		}
 
-		counter -= 2;
-
 		return A;
 	}
 
-	//return a boolean value if BN equals zero
-	public boolean isZero ()
-	{
-		boolean isZero;
-		byte[] I = this.getI();
-		long Icounter = I.length;
-		byte[] D = this.getD();
-		long Dcounter = D.length;
-
-		for (byte b:I)
-		{
-			if (b == 0)
-				Icounter--;
-		}
-		for (byte b:D)
-		{
-			if (b == 0)
-				Dcounter--;
-		}
-
-		isZero = (Icounter == 0) && (Dcounter == 0);
-
-		return isZero;
-	}
+//	//return a boolean value if BN equals zero
+//	public boolean isZero ()
+//	{
+//		boolean isZero= false;
+//
+//		if (getNumber().length() == 1 && getNumber().equals("0"))
+//		{
+//			isZero = true;
+//		}
+//		else
+//		{
+//			for (int i = 0; i < number.length(); i++)
+//			{
+//				if (number.charAt()==)
+//			}
+//		}
+//		return isZero;
+//	}
 
 	//implements interface Comparable
 	public int compareTo(BN y)
 	{
-		int R;
-
-		if (this.getS()==y.getS()) //case with same S
-		{
-			if (this.getS()==p) //case if this S is +
-			{
-				if ((this.DLength() == 0 && y.DLength() == 0)) //case without decimal numbers
-				{
-					int i = Integer.compare(this.ILength(), y.ILength());
-					if (i!=0)
-						R = i;
-					else
-						R = compareByteArrayValue(this.getI(), y.getI());
-				}
-				else if ((this.DLength() != 0 ^ y.DLength() != 0) && (this.length()==y.length())) //case with a only number with decimal part
-				{
-					if (this.ILength() != 0)
-						R = 1;
-					else
-						R = -1;
-				}
-				else
-				{
-					int i = Integer.compare(this.ILength(), y.ILength());
-					if (i!=0)
-						R = i;
-					else
-					{
-						int i1 = compareByteArrayValue(this.getI(), y.getI());
-						if(i1==0)
-							R = compareByteArrayValue(this.getD(),y.getD());
-						else
-							R = i1;
-					}
-				}
-			}
-			else //case if this S is -
-			{
-				y.setS(p);
-				this.setS(p);
-
-				R = invert(y.compareTo(this));
-
-				this.BNInitialize();
-				y.BNInitialize();
-			}
-		}
-		else //case with different S
-		{
-			switch (this.getS())
-			{
-				case p: R = 1; break;
-				case m:	R = -1; break;
-				default: R = 0; break;
-			}
-		}
-
-		return R;
+//		int R;
+//
+//		if (this.getS()==y.getS()) //case with same S
+//		{
+//			if (this.getS()==p) //case if this S is +
+//			{
+//				if ((this.DLength() == 0 && y.DLength() == 0)) //case without decimal numbers
+//				{
+//					int i = Integer.compare(this.ILength(), y.ILength());
+//					if (i!=0)
+//						R = i;
+//					else
+//						R = compareByteArrayValue(this.getI(), y.getI());
+//				}
+//				else if ((this.DLength() != 0 ^ y.DLength() != 0) && (this.length()==y.length())) //case with a only number with decimal part
+//				{
+//					if (this.ILength() != 0)
+//						R = 1;
+//					else
+//						R = -1;
+//				}
+//				else
+//				{
+//					int i = Integer.compare(this.ILength(), y.ILength());
+//					if (i!=0)
+//						R = i;
+//					else
+//					{
+//						int i1 = compareByteArrayValue(this.getI(), y.getI());
+//						if(i1==0)
+//							R = compareByteArrayValue(this.getD(),y.getD());
+//						else
+//							R = i1;
+//					}
+//				}
+//			}
+//			else //case if this S is -
+//			{
+//				y.setS(p);
+//				this.setS(p);
+//
+//				R = invert(y.compareTo(this));
+//
+//				this.BNInitialize();
+//				y.BNInitialize();
+//			}
+//		}
+//		else //case with different S
+//		{
+//			switch (this.getS())
+//			{
+//				case p: R = 1; break;
+//				case m:	R = -1; break;
+//				default: R = 0; break;
+//			}
+//		}
+//
+//		return R;
 	}
 
 	//this is a method to sum two BN object
