@@ -3,12 +3,25 @@ package BigNumbers;
 /**
  * Created by Andrea (Black) Costa on 27/06/16.
  * It belong to BigNumbers
+ *
+ *          This program is free software: you can redistribute it and/or modify
+ *		    it under the terms of the GNU General Public License as published by
+ *		    the Free Software Foundation, either version 3 of the License, or
+ *		    any later version.
+ *
+ *		    This program is distributed in the hope that it will be useful,
+ *		    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *		    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *		    GNU General Public License for more details.
+ *
+ *		    You should have received a copy of the GNU General Public License
+ *		    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 public class BN implements Comparable<BN>{
 //internal variables
 	private static final char comma = ',', period = '.', p = '+', m = '-';
-	private long id;
+	private long id, commaRegex;
 	private static long counter = 0;
 	private char s;
 	private String number;
@@ -71,6 +84,14 @@ public class BN implements Comparable<BN>{
 	private void setId(long id) {
 		this.id = id;
 	}
+	private long getCommaRegex()
+	{
+		return commaRegex;
+	}
+	private void setCommaRegex(long commaRegex)
+	{
+		this.commaRegex = commaRegex;
+	}
 	private static long getCounter() {
 		//increase the counter value and return this value -1
 		return (counter++ -1);
@@ -116,11 +137,12 @@ public class BN implements Comparable<BN>{
 		return c1;
 	}
 
+	//insert only comma Character in the number string
 	private String regularize(String s)
 	{
-		if (s.contains(String.valueOf(period)))
+		if (s.contains(String.valueOf(period)))//if number contains a dot, it will be a comma
 		{
-			s = s.replaceAll(String.valueOf(period),String.valueOf(comma));
+			s = s.replaceAll(String.valueOf(period),String.valueOf(comma));//replace with comma
 		}
 
 		return s;
@@ -128,13 +150,14 @@ public class BN implements Comparable<BN>{
 
 	//create an Exception if number contains a not valid character
 	private boolean generateCharacterException (String input)
-	 {
-	 	input = regularize(input);
+	{
+	 	input = regularize(input); //regularize the input string
 
-		boolean generate=false;
+		boolean generate=false; //boolean variable for generating exceptions
 
 		 for (int i = 0; i < input.length(); )
 		{
+			//check if character is correct
 			if (!(((input.charAt(i) == '0') ||
 				   (input.charAt(i) == '1') ||
 				   (input.charAt(i) == '2') ||
@@ -152,22 +175,23 @@ public class BN implements Comparable<BN>{
 				 )
 			   )
 			{
-				generate = true;
+				generate = true; //allow to generate exception
 				break;
 			}
 
+			//verify if comma or S character is duplicated
 			if (!generate)
 			{
 				if ((input.indexOf(comma) != input.lastIndexOf(comma)) ||
 					(input.indexOf(p) != input.lastIndexOf(p)) ||
 					(input.indexOf(m) != input.lastIndexOf(m)))
 				{
-					generate = true;
+					generate = true; //allow to generate exception
 				}
 			}
 		}
 
-		return generate;
+		return generate; //return word with local boolean variable generate
 	}
 
 	//check number isn't null
@@ -193,6 +217,7 @@ public class BN implements Comparable<BN>{
 				setNumber("ERROR"); //set a number value to mark this is a malformed object
 				setS('÷'); //set a s value to mark this is a malformed object
 				setId(-999); //set a long value to mark this is a malformed object
+				setCommaRegex(0);  //set commaRegex value to mark this is a malformed object
 			}
 		}
 		else
@@ -219,6 +244,9 @@ public class BN implements Comparable<BN>{
 				setNumber("0"); //number equals 0
 				setId(getCounter()); //set the id of object
 			}
+
+			//set Regex of comma in this number (if is -1 it's an integer)
+			setCommaRegex(getNumber().indexOf(comma));
 		}
 	}
 
@@ -267,82 +295,53 @@ public class BN implements Comparable<BN>{
 //	}
 
 	//implements interface Comparable
-	public int compareTo(BN y)
+	public int compareTo(BN bn)
 	{
-//		int R;
-//
-//		if (this.getS()==y.getS()) //case with same S
-//		{
-//			if (this.getS()==p) //case if this S is +
-//			{
-//				if ((this.DLength() == 0 && y.DLength() == 0)) //case without decimal numbers
-//				{
-//					int i = Integer.compare(this.ILength(), y.ILength());
-//					if (i!=0)
-//						R = i;
-//					else
-//						R = compareByteArrayValue(this.getI(), y.getI());
-//				}
-//				else if ((this.DLength() != 0 ^ y.DLength() != 0) && (this.length()==y.length())) //case with a only number with decimal part
-//				{
-//					if (this.ILength() != 0)
-//						R = 1;
-//					else
-//						R = -1;
-//				}
-//				else
-//				{
-//					int i = Integer.compare(this.ILength(), y.ILength());
-//					if (i!=0)
-//						R = i;
-//					else
-//					{
-//						int i1 = compareByteArrayValue(this.getI(), y.getI());
-//						if(i1==0)
-//							R = compareByteArrayValue(this.getD(),y.getD());
-//						else
-//							R = i1;
-//					}
-//				}
-//			}
-//			else //case if this S is -
-//			{
-//				y.setS(p);
-//				this.setS(p);
-//
-//				R = invert(y.compareTo(this));
-//
-//				this.BNInitialize();
-//				y.BNInitialize();
-//			}
-//		}
-//		else //case with different S
-//		{
-//			switch (this.getS())
-//			{
-//				case p: R = 1; break;
-//				case m:	R = -1; break;
-//				default: R = 0; break;
-//			}
-//		}
-//
-//		return R;
+		int R;
+		/*******************************************************************************************************/
+
+		if (this.getS()==bn.getS()) //case with same S
+		{
+			if (this.getS()==p) //case if this S is +
+			{
+				if (this.length()>bn.length())
+				{
+
+				}
+			}
+			else //case if this S is -
+			{
+				bn.setS(p);
+				this.setS(p);
+
+				R = invert(bn.compareTo(this));
+
+				this.BNInitialize();
+				bn.BNInitialize();
+			}
+		}
+		else //case with different S
+		{
+			switch (this.getS())
+			{
+				case p: R = 1; break;
+				case m:	R = -1; break;
+				default: R = 0; break;
+			}
+		}
+
+		return R;
 	}
 
 	//this is a method to sum two BN object
 	public BN sum (BN addend)
 	{
-		boolean decimal;
-		byte[] b;
-		byte[] b1;
 		BN R;
+		/*******************************************************************************************************/
 
 
 		if (addend.getS() == this.getS())//case with same S
 		{
-			b1 = new byte[1];
-			decimal = !(addend.getd().isEmpty() && this.getd().isEmpty());
-
 			if (this.compareTo(addend) > 0) //case A>B
 			{
 				b = new byte[this.ILength()];
