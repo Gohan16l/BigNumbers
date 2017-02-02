@@ -121,6 +121,22 @@ public class BN implements Comparable<BN>{
 		return getNumber().length();
 	}
 
+	//build a string with a repetition of string input
+	private String stringRepeater(String str, long repeat)
+	{
+		String s = "";
+
+		if (repeat > 0)
+		{
+			for (; repeat > 0 ;repeat--)
+			{
+				s = s.concat(str);//concat the string to repeat
+			}
+		}
+
+		return s;
+	}
+
 	//invert sign of BN object
 	private static char invert (char c)
 	{
@@ -802,7 +818,7 @@ public class BN implements Comparable<BN>{
 							if (l2 != 0)
 								partial = partial.sum(this);
 							else
-								partial = partial.sum(new BN(stringTokenizer("0",s.length() - 1), 'c'));
+								partial = partial.sum(new BN(stringRepeater("0", s.length() - 1), 'c'));
 						}
 
 
