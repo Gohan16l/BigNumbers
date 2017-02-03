@@ -7,7 +7,7 @@ import java.util.Scanner;
 public class Main {
 	//internal variables
 	private static Scanner keyboard = new Scanner(System.in);
-	private static String version = "0.1.0.10" ;
+	private static String version = "0.1.0.4" ;
 
 	//methods
 	private static <Type> void println(Type object)
