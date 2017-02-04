@@ -100,8 +100,54 @@ public class BN implements Comparable<BN>{
 		return getNumber().length();
 	}
 
-	//invert sign of BN object
-	private static char invert (char c)
+	//Return a boolean value depending on the length of the two numbers
+	private static boolean identicalLength(BN x, BN y)
+	{
+		return x.length() == y.length();
+	}
+
+	//TRADURRE
+	//ritorna l'indice del carattere della virgola nella stringa number dell'oggetto BN
+	private static long indiceVirgola (BN x)
+	{
+		return x.getNumber().indexOf(comma); //sarà -1 se il carattere non è presente
+	}
+
+	//TRADURRE
+	//rende di uguale lunghezza due numeri
+	private static void aggiungiZeri(BN x, BN y)
+	{
+		String zero = "0";
+		long differenzaLunghezza;
+
+		differenzaLunghezza = x.length()-y.length();
+
+		if (differenzaLunghezza > 0) //x è più lungo
+		{
+			if (indiceVirgola(y)<0)
+				y.setNumber(y.getNumber().concat(String.valueOf(comma))); //aggiunge la virgola nel caso sia un numero soltanto intero
+
+			for (long i = 0; i < differenzaLunghezza; i++)
+			{
+				y.setNumber(y.getNumber().concat(zero));
+			}
+		}
+		else //x è più corto
+		{
+			if (indiceVirgola(x)<0)
+				x.setNumber(x.getNumber().concat(String.valueOf(comma))); //aggiunge la virgola nel caso sia un numero soltanto intero
+
+			for (long i = 0; i < Math.abs(differenzaLunghezza); i++)
+			{
+				x.setNumber(x.getNumber().concat(zero));
+			}
+		}
+
+		x.BNInitialize(); y.BNInitialize(); //reinizializzazione dei due oggetti
+	}
+
+	//invertS sign of BN object
+	private static char invertS(char c)
 	{
 		char c1 = p;
 		switch (c)
@@ -116,7 +162,7 @@ public class BN implements Comparable<BN>{
 		return c1;
 	}
 
-	private String regularize(String s)
+	private static String regularize(String s)
 	{
 		if (s.contains(String.valueOf(period)))
 		{
@@ -266,9 +312,47 @@ public class BN implements Comparable<BN>{
 //		return isZero;
 //	}
 
+	//TRADURRE
 	//implements interface Comparable
+	//ritorna -1 se è maggiore questo oggetto(this), 1 per il parametro (y) e 0 se sono uguali
 	public int compareTo(BN y)
 	{
+		int compare = 0;
+
+		if (this.getS()!=y.getS())//se il segno (S) è diverso
+		{
+			if (this.getS()==p) //se il segno di this è positivo sarà lui ad essere il maggiore
+				compare = 1;
+			else //altrimenti sarà il minore
+				compare = 2;
+		}
+		else //se il sengo è uguale
+		{
+			if (!identicalLength(this, y)) //caso in cui non hanno la stessa lunghezza
+			{
+				aggiungiZeri(this,y);
+			}
+
+			//noinspection SuspiciousNameCombination
+			if (indiceVirgola(this) == indiceVirgola(y)) //caso in cui la parte intera è uguale
+			{
+				if ()
+				/********************************************************************************************/
+			}
+			else //caso se la parte intera è di diversa lunghezza
+			{
+				//noinspection SuspiciousNameCombination
+				if (indiceVirgola(this) > indiceVirgola(y)) //se l'indice della virgola è maggiore allora la parte intera è maggiore
+				{
+					compare = 1;
+				}
+				else //altrimenti è minore
+				{
+					compare = 2;
+				}
+			}
+		}
+
 //		int R;
 //
 //		if (this.getS()==y.getS()) //case with same S
@@ -310,23 +394,14 @@ public class BN implements Comparable<BN>{
 //				y.setS(p);
 //				this.setS(p);
 //
-//				R = invert(y.compareTo(this));
+//				R = invertS(y.compareTo(this));
 //
 //				this.BNInitialize();
 //				y.BNInitialize();
 //			}
 //		}
-//		else //case with different S
-//		{
-//			switch (this.getS())
-//			{
-//				case p: R = 1; break;
-//				case m:	R = -1; break;
-//				default: R = 0; break;
-//			}
-//		}
-//
-//		return R;
+
+		return compare;
 	}
 
 	//this is a method to sum two BN object
@@ -415,10 +490,10 @@ public class BN implements Comparable<BN>{
 
 			if (!(b1.length == 1 && b1[0] == 0))//unit rest from D to I
 			{
-				if (modulo(invert(b1)).length != b1.length)//check rest is necessary
+				if (modulo(invertS(b1)).length != b1.length)//check rest is necessary
 				{
 					b[0] += 1;
-					byte[] b2 = modulo(invert(b1));
+					byte[] b2 = modulo(invertS(b1));
 					byte[] b3 = new byte[b1.length];
 					System.arraycopy(b2, 0, b3, 0, b1.length);
 					R = new BN(charToString(this.getS()).concat(byteArrayToString(modulo(b))).concat(",").concat(byteArrayToString(b3)));
@@ -426,7 +501,7 @@ public class BN implements Comparable<BN>{
 				}
 				else
 				{
-					R = new BN(charToString(this.getS()).concat(byteArrayToString(modulo(b))).concat(",").concat(byteArrayToString(modulo(invert(b1)))));
+					R = new BN(charToString(this.getS()).concat(byteArrayToString(modulo(b))).concat(",").concat(byteArrayToString(modulo(invertS(b1)))));
 					return R;
 				}
 			}
@@ -461,7 +536,7 @@ public class BN implements Comparable<BN>{
 							}
 
 						}
-						b[i] = add(this.IByteAt(i), invert(addend.IByteAt(i)));
+						b[i] = add(this.IByteAt(i), invertS(addend.IByteAt(i)));
 					}
 					for (int i = addend.ILength(); i < this.ILength(); i++)
 					{
@@ -487,7 +562,7 @@ public class BN implements Comparable<BN>{
 							}
 						}
 
-						b[i] = add(addend.IByteAt(i), invert(this.IByteAt(i)));
+						b[i] = add(addend.IByteAt(i), invertS(this.IByteAt(i)));
 					}
 					for (int i = this.ILength(); i < addend.ILength(); i++)
 					{
@@ -514,7 +589,7 @@ public class BN implements Comparable<BN>{
 									b = sumByteAt(b, i + 1, -1);
 									b = sumByteAt(b, i, 10);
 								}
-								b = sumByteAt(b, i, add(this.IByteAt(i), invert(addend.IByteAt(i))));
+								b = sumByteAt(b, i, add(this.IByteAt(i), invertS(addend.IByteAt(i))));
 								Iequals = false;
 								Pmajor = true;
 
@@ -530,7 +605,7 @@ public class BN implements Comparable<BN>{
 									b = sumByteAt(b, i + 1, -1);
 									b = sumByteAt(b, i, 10);
 								}
-								b = sumByteAt(b, i, (add(addend.IByteAt(i), invert(this.IByteAt(i)))));
+								b = sumByteAt(b, i, (add(addend.IByteAt(i), invertS(this.IByteAt(i)))));
 								Iequals = false;
 								Pmajor = false;
 								c1 = m;
@@ -577,7 +652,7 @@ public class BN implements Comparable<BN>{
 										z--;
 									}
 								}
-								b1 = sumByteAt(b1, i, (byte) Math.abs(add(this.DByteAt(i), invert(addend.DByteAt(i)))));
+								b1 = sumByteAt(b1, i, (byte) Math.abs(add(this.DByteAt(i), invertS(addend.DByteAt(i)))));
 							}
 						}
 						else
@@ -588,7 +663,7 @@ public class BN implements Comparable<BN>{
 
 							//addend.setD(b2);
 
-							BN X = new BN(charToString(m).concat(this.getd())).sum(new BN(byteArrayToString(invert(b2))));
+							BN X = new BN(charToString(m).concat(this.getd())).sum(new BN(byteArrayToString(invertS(b2))));
 
 							counter -= 3;
 
@@ -597,7 +672,7 @@ public class BN implements Comparable<BN>{
 								b = new BN(byteArrayToString(b)).sum(new BN("-1")).getI();
 							}*/
 
-							b1 = invert(X.getI());
+							b1 = invertS(X.getI());
 
 						}
 					}  /*ammaccabanane*/
@@ -627,7 +702,7 @@ public class BN implements Comparable<BN>{
 										z--;
 									}
 								}
-								b1 = sumByteAt(b1, i, (byte) Math.abs(add(addend.DByteAt(i), invert(this.DByteAt(i)))));
+								b1 = sumByteAt(b1, i, (byte) Math.abs(add(addend.DByteAt(i), invertS(this.DByteAt(i)))));
 							}
 						}
 						else
@@ -637,11 +712,11 @@ public class BN implements Comparable<BN>{
 							System.arraycopy(this.getD(), 0, b2, 0, this.DLength());
 
 
-							BN X = new BN(charToString(m).concat(addend.getd())).sum(new BN(byteArrayToString(invert(b2))));
+							BN X = new BN(charToString(m).concat(addend.getd())).sum(new BN(byteArrayToString(invertS(b2))));
 
 							counter -= 3;
 
-							b1 = invert(X.getI());
+							b1 = invertS(X.getI());
 						}
 
 						if (Iequals)
@@ -656,7 +731,7 @@ public class BN implements Comparable<BN>{
 						{
 							if (Byte.compare(addend.DByteAt(i), this.DByteAt(i)) < 0)
 							{
-								if (add(addend.DByteAt(i), invert(this.DByteAt(i))) < 0 && (!Iequals && !Pmajor))
+								if (add(addend.DByteAt(i), invertS(this.DByteAt(i))) < 0 && (!Iequals && !Pmajor))
 								{
 									BN X = orderOfSize(addend.DLength());
 									BN Y = new BN(addend.getd());
@@ -665,7 +740,7 @@ public class BN implements Comparable<BN>{
 
 									try
 									{
-										b1 = invert(new BN(generateCharacterException(byteArrayToString((X.sum(Y)).sum(Z).getI()))).getI());
+										b1 = invertS(new BN(generateCharacterException(byteArrayToString((X.sum(Y)).sum(Z).getI()))).getI());
 									}
 									catch (BNCharacterException | BNIntegerException e)
 									{
@@ -677,13 +752,13 @@ public class BN implements Comparable<BN>{
 								}
 								else
 								{
-									b1 = sumByteAt(b1, i, add(this.DByteAt(i), invert(addend.DByteAt(i))));
+									b1 = sumByteAt(b1, i, add(this.DByteAt(i), invertS(addend.DByteAt(i))));
 								}
 							}
 							else if (Byte.compare(addend.DByteAt(i), this.DByteAt(i)) > 0)
 							{
 
-								if (add(this.DByteAt(i), invert(addend.DByteAt(i))) < 0 && (!Iequals && !Pmajor))
+								if (add(this.DByteAt(i), invertS(addend.DByteAt(i))) < 0 && (!Iequals && !Pmajor))
 								{
 									BN X = orderOfSize(addend.DLength());
 									BN Y = new BN(this.getd());
@@ -692,7 +767,7 @@ public class BN implements Comparable<BN>{
 
 									try
 									{
-										b1 = invert(new BN(generateCharacterException(byteArrayToString((X.sum(Y)).sum(Z).getI()))).getI());
+										b1 = invertS(new BN(generateCharacterException(byteArrayToString((X.sum(Y)).sum(Z).getI()))).getI());
 									}
 									catch (BNCharacterException | BNIntegerException e)
 									{
@@ -704,7 +779,7 @@ public class BN implements Comparable<BN>{
 								}
 								else
 								{
-									b1 = sumByteAt(b1, i, add(addend.DByteAt(i), invert(this.DByteAt(i))));
+									b1 = sumByteAt(b1, i, add(addend.DByteAt(i), invertS(this.DByteAt(i))));
 								}
 									if (Iequals)
 										c1 = m;
@@ -720,20 +795,20 @@ public class BN implements Comparable<BN>{
 					{
 						BN provv = new BN(byteArrayToString(b));
 						b = provv.sum(new BN("-1")).getI();
-						b1 = (orderOfSize(b1.length).sum(new BN("-".concat(byteArrayToString(invert(b1)))))).getI();
+						b1 = (orderOfSize(b1.length).sum(new BN("-".concat(byteArrayToString(invertS(b1)))))).getI();
 						counter -= 4;
-						System.arraycopy(invert(b1),1,b1,0,b1.length-1);
+						System.arraycopy(invertS(b1), 1, b1, 0, b1.length-1);
 					}
 
 
-					R.setNumber(charToString(c1).concat(byteArrayToString(modulo(b))).concat(",").concat(byteArrayToString(modulo(invert(b1)))));
+					R.setNumber(charToString(c1).concat(byteArrayToString(modulo(b))).concat(",").concat(byteArrayToString(modulo(invertS(b1)))));
 					R.BNInitialize();
 				}
 			}
 			else
 			{
 				R = addend.sum(this);
-				//C.setS(invert(C.getS()));
+				//C.setS(invertS(C.getS()));
 			}
 		}
 
@@ -752,7 +827,7 @@ public class BN implements Comparable<BN>{
 
 		counter -= 1;
 
-		detract.setS(invert(detract.getS()));
+		detract.setS(invertS(detract.getS()));
 
 		R = this.sum(detract);
 
@@ -784,7 +859,7 @@ public class BN implements Comparable<BN>{
 				}
 				else
 				{
-					char[] f = invert(factor.getAbs().toCharArray());
+					char[] f = invertS(factor.getAbs().toCharArray());
 					String s;
 					long l = 0;
 
@@ -840,7 +915,7 @@ public class BN implements Comparable<BN>{
 						abs1 = abs1.concat(String.valueOf(this.IByteAt(j)));
 					else
 					{
-						//this.setD(invert(this.getD()));
+						//this.setD(invertS(this.getD()));
 						abs1 = abs1.concat(String.valueOf(this.DByteAt(j - this.ILength())));
 					}
 				}
@@ -851,7 +926,7 @@ public class BN implements Comparable<BN>{
 						abs2 = abs2.concat(String.valueOf(factor.IByteAt(j)));
 					else
 					{
-						//factor.setD(invert(factor.getD()));
+						//factor.setD(invertS(factor.getD()));
 						abs2 = abs2.concat(String.valueOf(factor.DByteAt(j - factor.ILength())));
 					}
 				}
