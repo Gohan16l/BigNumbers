@@ -3,6 +3,19 @@ package BigNumbers;
 /**
  * Created by Andrea (Black) Costa on 27/06/16.
  * It belong to BigNumbers
+ *
+ *          This program is free software: you can redistribute it and/or modify
+ *		    it under the terms of the GNU General Public License as published by
+ *		    the Free Software Foundation, either version 3 of the License, or
+ *		    any later version.
+ *
+ *		    This program is distributed in the hope that it will be useful,
+ *		    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *		    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *		    GNU General Public License for more details.
+ *
+ *		    You should have received a copy of the GNU General Public License
+ *		    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 public class BN implements Comparable<BN>{
@@ -100,10 +113,35 @@ public class BN implements Comparable<BN>{
 		return getNumber().length();
 	}
 
+	//convert a single char to a byte
+	private static byte charToByte (char s1)
+	{
+		byte n;
+		n = Byte.parseByte(String.valueOf(s1));
+		return n;
+	}
+
 	//Return a boolean value depending on the length of the two numbers
 	private static boolean identicalLength(BN x, BN y)
 	{
 		return x.length() == y.length();
+	}
+
+	//TRADURRE banana
+	//confronta le cifre di due numeri e restituisce -1 se è maggiore il primo, 1 se è maggiore il secondo, 0 se sono uguali
+	private static byte confrontaCifre(String s1, String s2)
+	{
+		byte b=0;
+		for (int i = 0; i < s1.length(); i++)
+		{
+			//caso in cui è maggiore il primo o il secondo
+			if (charToByte(s1.charAt(i)) > charToByte(s2.charAt(i)) || charToByte(s1.charAt(i)) < charToByte(s2.charAt(i)))
+			{
+				b = (byte) Byte.compare(charToByte(s1.charAt(i)), charToByte(s2.charAt(i)));
+				break;
+			}
+		}
+		return b;
 	}
 
 	//TRADURRE
@@ -174,7 +212,7 @@ public class BN implements Comparable<BN>{
 
 	//create an Exception if number contains a not valid character
 	private boolean generateCharacterException (String input)
-	 {
+	{
 	 	input = regularize(input);
 
 		boolean generate=false;
@@ -293,28 +331,30 @@ public class BN implements Comparable<BN>{
 		return A;
 	}
 
-//	//return a boolean value if BN equals zero
-//	public boolean isZero ()
-//	{
-//		boolean isZero= false;
-//
-//		if (getNumber().length() == 1 && getNumber().equals("0"))
-//		{
-//			isZero = true;
-//		}
-//		else
-//		{
-//			for (int i = 0; i < number.length(); i++)
-//			{
-//				if (number.charAt()==)
-//			}
-//		}
-//		return isZero;
-//	}
+/*	//return a boolean value if BN equals zero
+	public boolean isZero ()
+	{
+		boolean isZero= false;
+
+		if (getNumber().length() == 1 && getNumber().equals("0"))
+		{
+			isZero = true;
+		}
+		else
+		{
+			for (int i = 0; i < number.length(); i++)
+			{
+				if (number.charAt()==)
+			}
+		}
+		return isZero;
+	}*/
 
 	//TRADURRE
+	//CONTROLLARE
 	//implements interface Comparable
-	//ritorna -1 se è maggiore questo oggetto(this), 1 per il parametro (y) e 0 se sono uguali
+	/** ritorna -1 se è maggiore questo oggetto(this), 1 per il parametro (y) e 0 se sono uguali */
+	@SuppressWarnings("SuspiciousNameCombination")
 	public int compareTo(BN y)
 	{
 		int compare = 0;
@@ -322,9 +362,9 @@ public class BN implements Comparable<BN>{
 		if (this.getS()!=y.getS())//se il segno (S) è diverso
 		{
 			if (this.getS()==p) //se il segno di this è positivo sarà lui ad essere il maggiore
-				compare = 1;
+				compare = -1;
 			else //altrimenti sarà il minore
-				compare = 2;
+				compare = 1;
 		}
 		else //se il sengo è uguale
 		{
@@ -333,76 +373,47 @@ public class BN implements Comparable<BN>{
 				aggiungiZeri(this,y);
 			}
 
-			//noinspection SuspiciousNameCombination
-			if (indiceVirgola(this) == indiceVirgola(y)) //caso in cui la parte intera è uguale
+			//PUO' GENERARE ERRORI!!!!!!!!!!!!!!!!!!!!
+			if (indiceVirgola(this) == indiceVirgola(y)) //caso in cui la parte intera è di uguale lunghezza
 			{
-				if ()
-				/********************************************************************************************/
+				if (confrontaCifre(this.getNumber().split(String.valueOf(comma))[0], y.getNumber().split(String.valueOf(comma))[0]) == 0) //caso in cui le parti intere si equivalgono
+				{
+					if (indiceVirgola(this) > 0 && indiceVirgola(y) > 0) //caso in cui entrambi hanno la parte decimale
+					{
+						compare = confrontaCifre(this.getNumber().split(String.valueOf(comma))[1], y.getNumber().split(String.valueOf(comma))[1]);
+					}
+					else if (indiceVirgola(this) > 0 ^ indiceVirgola(y) > 0) //caso in cui solo uno dei due ha la parte decimale
+					{
+						compare = indiceVirgola(this) > 0 ? -1 : 1; //ritorna 1 se this ha una parte decimale altrimenti riporta 1
+					}
+					else //caso in cui non hanno parte decimale
+					{
+						compare = 0;
+					}
+				}
+				else
+				{
+					compare = confrontaCifre(this.getNumber().split(String.valueOf(comma))[0], y.getNumber().split(String.valueOf(comma))[0]);
+				}
 			}
 			else //caso se la parte intera è di diversa lunghezza
 			{
 				//noinspection SuspiciousNameCombination
 				if (indiceVirgola(this) > indiceVirgola(y)) //se l'indice della virgola è maggiore allora la parte intera è maggiore
 				{
-					compare = 1;
+					compare = -1;
 				}
 				else //altrimenti è minore
 				{
-					compare = 2;
+					compare = 1;
 				}
 			}
 		}
 
-//		int R;
-//
-//		if (this.getS()==y.getS()) //case with same S
-//		{
-//			if (this.getS()==p) //case if this S is +
-//			{
-//				if ((this.DLength() == 0 && y.DLength() == 0)) //case without decimal numbers
-//				{
-//					int i = Integer.compare(this.ILength(), y.ILength());
-//					if (i!=0)
-//						R = i;
-//					else
-//						R = compareByteArrayValue(this.getI(), y.getI());
-//				}
-//				else if ((this.DLength() != 0 ^ y.DLength() != 0) && (this.length()==y.length())) //case with a only number with decimal part
-//				{
-//					if (this.ILength() != 0)
-//						R = 1;
-//					else
-//						R = -1;
-//				}
-//				else
-//				{
-//					int i = Integer.compare(this.ILength(), y.ILength());
-//					if (i!=0)
-//						R = i;
-//					else
-//					{
-//						int i1 = compareByteArrayValue(this.getI(), y.getI());
-//						if(i1==0)
-//							R = compareByteArrayValue(this.getD(),y.getD());
-//						else
-//							R = i1;
-//					}
-//				}
-//			}
-//			else //case if this S is -
-//			{
-//				y.setS(p);
-//				this.setS(p);
-//
-//				R = invertS(y.compareTo(this));
-//
-//				this.BNInitialize();
-//				y.BNInitialize();
-//			}
-//		}
-
 		return compare;
 	}
+
+	/***********************************************************************************************/
 
 	//this is a method to sum two BN object
 	public BN sum (BN addend)
