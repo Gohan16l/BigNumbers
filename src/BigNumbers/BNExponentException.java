@@ -20,7 +20,7 @@ package BigNumbers;
 
 public class BNExponentException extends Exception {
 //inner variables
-	private final String error="Exponent must not negative";
+	private final String error = "Exponent must not negative";
 
 //constructors
 
