@@ -19,18 +19,19 @@ package BigNumbers;
  */
 
 class BNCharacterException extends Exception {
-//stato interno
-	private final String error ="The Character is not valid!";
+//inner variables
+	private final String error = "The Character is not valid!";
 
 
-//costruttori
+//costructors
 
 
-//manipolatori
-	String getError () {
+//manipulators
+	String getError () 
+	{
 		return error;
 	}
 
-//metodi
+//methods
 
 }
