@@ -20,7 +20,7 @@ import java.util.Scanner;
  */
 
 public class Main {
-	//internal variables
+	//inner variables
 	private static Scanner keyboard = new Scanner(System.in);
 	private static String version = "0.1.0.10" ;
 
