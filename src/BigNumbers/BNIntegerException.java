@@ -19,16 +19,17 @@ package BigNumbers;
  */
 
 class BNIntegerException extends Exception {
-//internal variables
-	private final String error="Integer must not null";
+//inner variables
+	private final String error = "Integer must not null";
 
 //constructors
 
 
 //manipulators
-	String getError () {
+	String getError () 
+	{
 	return error;
-}
+	}
 
 
 //methods
