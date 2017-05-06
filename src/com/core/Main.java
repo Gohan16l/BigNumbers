@@ -65,7 +65,7 @@ public class Main {
 		println(C.getNumber()); //print C value
 		println(String.valueOf("digits used:" + C.length())); //print C length
 
-		if ((((finalTime - startTime) / 1000) / 60) >= 60)//if time greater than an hour
+		if ((((finalTime - startTime) / 1000) / 60) >= 60)//having time bigger than an hour
 		{
 			long hours = ((finalTime - startTime) / 1000) / 3600;
 			long hs = hours * 60;
@@ -74,14 +74,14 @@ public class Main {
 			long seconds = ((finalTime - startTime) / 1000) - ms;
 			System.out.print("execution time: " + hours + " hours, " + minutes + " minutes and " + seconds + " seconds");
 		}
-		else if (((finalTime - startTime) / 1000) >= 60) //if time greater than a minute
+		else if (((finalTime - startTime) / 1000) >= 60) //having time bigger than a minute
 		{
 			long minutes = ((finalTime - startTime) / 1000) / 60;
 			long ms = minutes * 60;
 			long seconds = ((finalTime - startTime) / 1000) - ms;
 			System.out.print("execution time: " + minutes + " minutes and " + seconds + " seconds");
 		}
-		else //if time is less than a minute
+		else //having time smaller than a minute
 		{
 			System.out.print("execution time: " + ((finalTime - startTime) / 1000) + " seconds");
 		}
