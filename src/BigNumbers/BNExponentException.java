@@ -19,13 +19,14 @@ package BigNumbers;
  */
 
 public class BNExponentException extends Exception {
-//internal variables
+//inner variables
 	private final String error="Exponent must not negative";
 
 //constructors
 
 //manipulators
-	String getError () {
+	String getError () 
+	{
 		return error;
 	}
 
